@@ -1,0 +1,9 @@
+Options -Indexes
+RewriteEngine On
+
+# Si estás en una subcarpeta, a veces es necesario definir la base:
+RewriteBase /anacosmeticsy/public/
+
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(.*)$ index.php?url=$1 [QSA,L]
