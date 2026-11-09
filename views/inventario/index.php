@@ -2,7 +2,7 @@
 
 <!-- Header tipo App Bar Responsivo -->
 <div class="page-header d-print-none mb-3 border-bottom pb-3">
-<div class="container-fluid px-3 px-lg-4">
+  <div class="container-fluid px-3 px-lg-4">
     <div class="row g-2 align-items-center">  
       <!-- Título e Información del Módulo -->
       <div class="col-12 col-md-auto">
@@ -17,17 +17,16 @@
         </div>
       </div>
       
-      <!-- Acciones Responsivas -->
       <!-- Acciones Responsivas (Optimizadas para Móvil y PC) -->
       <div class="col-12 col-md-auto ms-md-auto">
         
-        <!-- 1. VISTA MÓVIL: Botones principales + Menú desplegable -->
+        <!-- 1. VISTA MÓVIL: Botones principales + Menú desplegable completo -->
         <div class="d-flex d-md-none gap-2 w-100 flex-column">
           <div class="d-flex gap-2">
             <!-- Botón principal de carga -->
             <a href="/anacosmeticsy/public/inventario/actualizar" class="btn btn-success flex-fill shadow-sm d-flex align-items-center justify-content-center gap-1">
               <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-truck-delivery" width="18" height="18" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M7 17m-2 a2 2 0 1 0 4 0 a2 2 0 1 0 -4 0" /><path d="M17 17m-2 a2 2 0 1 0 4 0 a2 2 0 1 0 -4 0" /><path d="M5 17h-2v-11a1 1 0 0 1 1 -1h9v12m-4 0h6m4 0h2v-6h-8m0 -5h5l3 5" /></svg>
-              Actualizar Inventario
+              Carga Stock
             </a>
             <!-- Botón nuevo producto -->
             <button class="btn btn-primary shadow-sm d-flex align-items-center justify-content-center gap-1" data-bs-toggle="modal" data-bs-target="#modal-producto" onclick="abrirModalNuevo()">
@@ -44,10 +43,29 @@
             </button>
             <ul class="dropdown-menu w-100 shadow-sm border-0">
               <li>
+                <a class="dropdown-item d-flex align-items-center gap-2 py-2 text-warning" href="/anacosmeticsy/public/mermas">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-alert-triangle" width="18" height="18" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 9v4" /><path d="M10.363 3.591l-8.106 13.534a1.914 1.914 0 0 0 1.636 2.871h16.214a1.914 1.914 0 0 0 1.636 -2.871l-8.106 -13.534a1.914 1.914 0 0 0 -3.274 0z" /><path d="M12 16h.01" /></svg>
+                  Control de Mermas / Salidas
+                </a>
+              </li>
+              <li>
                 <a class="dropdown-item d-flex align-items-center gap-2 py-2" href="/anacosmeticsy/public/inventario/historial">
                   <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-history text-purple" width="18" height="18" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 8l0 4l2 2" /><path d="M3.05 11a9 9 0 1 1 .5 4m-.5 5v-5h5" /></svg>
                   Historial de Cargas
                 </a>
+              </li>
+              <li><hr class="dropdown-divider"></li>
+              <li>
+                <a class="dropdown-item d-flex align-items-center gap-2 py-2" href="/anacosmeticsy/public/categoria">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-category text-primary" width="18" height="18" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M4 4h6v6h-6z" /><path d="M14 4h6v6h-6z" /><path d="M4 14h6v6h-6z" /><path d="M14 14h6v6h-6z" /></svg>
+                  Gestionar Categorías
+                </a>
+              </li>
+              <li>
+                <button class="dropdown-item d-flex align-items-center gap-2 py-2 text-success" data-bs-toggle="modal" data-bs-target="#modal-rapido-categoria" onclick="limpiarModalCategoriaRapida()">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-folder-plus" width="18" height="18" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 19h-7a2 2 0 0 1 -2 -2v-11a2 2 0 0 1 2 -2h4l3 3h7a2 2 0 0 1 2 2v3.5" /><path d="M16 19h6" /><path d="M19 16v6" /></svg>
+                  + Registrar Categoría Rápida
+                </button>
               </li>
               <li><hr class="dropdown-divider"></li>
               <li>
@@ -56,51 +74,42 @@
                   Volver al Dashboard
                 </a>
               </li>
-              <li>
-                <a class="dropdown-item d-flex align-items-center gap-2 py-2" href="/anacosmeticsy/public/categoria">
-                  <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-category text-primary" width="18" height="18" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M4 4h6v6h-6z" /><path d="M14 4h6v6h-6z" /><path d="M4 14h6v6h-6z" /><path d="M14 14h6v6h-6z" /></svg>
-                  Gestionar Categorías
-                </a>
-              </li>
-              <li><hr class="dropdown-divider"></li>
-              <li>
-                <button class="dropdown-item d-flex align-items-center gap-2 py-2 text-success" data-bs-toggle="modal" data-bs-target="#modal-rapido-categoria" onclick="limpiarModalCategoriaRapida()">
-                  <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-folder-plus" width="18" height="18" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 19h-7a2 2 0 0 1 -2 -2v-11a2 2 0 0 1 2 -2h4l3 3h7a2 2 0 0 1 2 2v3.5" /><path d="M16 19h6" /><path d="M19 16v6" /></svg>
-                  + Registrar Categoría Rápida
-                </button>
-              </li>
             </ul>
           </div>
         </div>
 
-        <!-- 2. VISTA ESCRITORIO: Todos los botones en línea -->
+        <!-- 2. VISTA ESCRITORIO: Botones principales + Menú "Auditoría & Mermas" -->
         <div class="d-none d-md-flex flex-wrap gap-2">
           <a href="/anacosmeticsy/public/dashboard" class="btn btn-outline-secondary">
             <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-arrow-left" width="20" height="20" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M5 12l14 0" /><path d="M5 12l6 6" /><path d="M5 12l6 -6" /></svg>
             Volver
           </a>
 
-          <!-- NUEVO BOTÓN: Historial de Cargas -->
+          <!-- BOTÓN DIRECTO: Control de Mermas y Salidas -->
+          <a href="/anacosmeticsy/public/mermas" class="btn btn-outline-warning d-flex align-items-center gap-1">
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-alert-triangle" width="20" height="20" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 9v4" /><path d="M10.363 3.591l-8.106 13.534a1.914 1.914 0 0 0 1.636 2.871h16.214a1.914 1.914 0 0 0 1.636 -2.871l-8.106 -13.534a1.914 1.914 0 0 0 -3.274 0z" /><path d="M12 16h.01" /></svg>
+            Control Mermas
+          </a>
+
+          <!-- Historial de Cargas -->
           <a href="/anacosmeticsy/public/inventario/historial" class="btn btn-outline-purple d-flex align-items-center gap-1">
             <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-history" width="20" height="20" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 8l0 4l2 2" /><path d="M3.05 11a9 9 0 1 1 .5 4m-.5 5v-5h5" /></svg>
             Historial Cargas
           </a>
 
+          <!-- Actualizar / Recibir Stock -->
           <a href="/anacosmeticsy/public/inventario/actualizar" class="btn btn-success d-flex align-items-center gap-1 shadow-sm">
             <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-truck-delivery" width="20" height="20" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M7 17m-2 a2 2 0 1 0 4 0 a2 2 0 1 0 -4 0" /><path d="M17 17m-2 a2 2 0 1 0 4 0 a2 2 0 1 0 -4 0" /><path d="M5 17h-2v-11a1 1 0 0 1 1 -1h9v12m-4 0h6m4 0h2v-6h-8m0 -5h5l3 5" /></svg>
-            Actualizar Inventario
+            Cargar Stock
           </a>
 
+          <!-- Categorías -->
           <a href="/anacosmeticsy/public/categoria" class="btn btn-outline-primary d-flex align-items-center gap-1">
             <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-category" width="20" height="20" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M4 4h6v6h-6z" /><path d="M14 4h6v6h-6z" /><path d="M4 14h6v6h-6z" /><path d="M14 14h6v6h-6z" /></svg>
             Categorías
           </a>
 
-          <button class="btn btn-outline-success d-flex align-items-center gap-1" data-bs-toggle="modal" data-bs-target="#modal-rapido-categoria" onclick="limpiarModalCategoriaRapida()">
-            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-folder-plus" width="20" height="20" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 19h-7a2 2 0 0 1 -2 -2v-11a2 2 0 0 1 2 -2h4l3 3h7a2 2 0 0 1 2 2v3.5" /><path d="M16 19h6" /><path d="M19 16v6" /></svg>
-            + Categoría
-          </button>
-
+          <!-- Nuevo Producto -->
           <button class="btn btn-primary d-flex align-items-center gap-1 shadow-sm" data-bs-toggle="modal" data-bs-target="#modal-producto" onclick="abrirModalNuevo()">
             <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-plus" width="20" height="20" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 5l0 14" /><path d="M5 12l14 0" /></svg>
             Nuevo Producto
@@ -127,6 +136,7 @@
       </div>
       <?php unset($_SESSION['mensaje']); ?>
     <?php endif; ?>
+    
     <!-- Mensajes de Error o Restricción -->
     <?php if (isset($_SESSION['error'])): ?>
       <div class="alert alert-danger alert-dismissible fade show border-0 shadow-sm mb-3" role="alert">
@@ -141,13 +151,13 @@
 
     <?php if (!empty($productos)): ?>
 
-      <!-- 1. VISTA MÓVIL (Tarjetas/Cards estilo App) - Se muestra en móviles y se oculta en PC -->
+      <!-- 1. VISTA MÓVIL (Tarjetas/Cards estilo App) -->
       <div class="d-block d-md-none">
         <div class="row row-cards">
-          <?php foreach ($productos as$p): ?>
+          <?php foreach ($productos as $p): ?>
             <?php 
-              $precioBs = $p['precio_usd'] *$tasaUsd;
-              $stockBajo = $p['stock'] <=$p['stock_minimo'];
+              $precioBs = $p['precio_usd'] * $tasaUsd;
+              $stockBajo = $p['stock'] <= $p['stock_minimo'];
             ?>
             <div class="col-12">
               <div class="card shadow-sm border-0 rounded-3">
@@ -194,7 +204,7 @@
         </div>
       </div>
 
-      <!-- 2. VISTA ESCRITORIO (Tabla tradicional) - Se oculta en móviles y se muestra en tablets/PC -->
+      <!-- 2. VISTA ESCRITORIO (Tabla tradicional) -->
       <div class="card shadow-sm border-0 rounded-3 d-none d-md-block">
         <div class="table-responsive">
           <table class="table table-vcenter card-table table-hover">
@@ -211,10 +221,10 @@
               </tr>
             </thead>
             <tbody>
-              <?php foreach ($productos as$p): ?>
+              <?php foreach ($productos as $p): ?>
                 <?php 
-                  $precioBs = $p['precio_usd'] *$tasaUsd;
-                  $stockBajo = $p['stock'] <=$p['stock_minimo'];
+                  $precioBs = $p['precio_usd'] * $tasaUsd;
+                  $stockBajo = $p['stock'] <= $p['stock_minimo'];
                 ?>
                 <tr>
                   <td class="text-muted fw-bold"><?= htmlspecialchars($p['codigo']) ?></td>
@@ -291,7 +301,6 @@
           </div>
 
           <div class="row">
-            <!-- En el modal de producto, reemplazamos el input de categoría por esto: -->
             <div class="col-12 col-md-4 mb-3">
               <label class="form-label required small text-muted text-uppercase fw-bold">Categoría</label>
               <select name="categoria_id" id="prod_categoria_id" class="form-select" required>
@@ -352,6 +361,7 @@
     </div>
   </div>
 </div>
+
 <!-- Modal Rápido para Crear Categoría desde Inventario -->
 <div class="modal modal-blur fade" id="modal-rapido-categoria" tabindex="-1" role="dialog" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered" role="document">
@@ -387,12 +397,12 @@
     </div>
   </div>
 </div>
+
 <!-- Modal Profesional de Confirmación de Eliminación -->
 <div class="modal modal-blur fade" id="modal-eliminar" tabindex="-1" role="dialog" aria-hidden="true">
   <div class="modal-dialog modal-sm modal-dialog-centered" role="document">
     <div class="modal-content shadow-lg border-0 rounded-3">
       <div class="modal-body text-center py-4">
-        <!-- Icono de advertencia animado / rojo -->
         <span class="avatar avatar-lg bg-danger-lt text-danger rounded-circle mb-3">
           <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-alert-triangle" width="32" height="32" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 9v4" /><path d="M10.363 3.591l-8.106 13.534a1.914 1.914 0 0 0 1.636 2.875h16.214a1.914 1.914 0 0 0 1.636 -2.875l-8.106 -13.534a1.914 1.914 0 0 0 -3.274 0z" /><path d="M12 16h.01" /></svg>
         </span>
@@ -408,6 +418,7 @@
     </div>
   </div>
 </div>
+
 <script>
   const tasaBcv = <?= (float) $tasaUsd ?>;
 
@@ -454,18 +465,14 @@
   }
 
   function confirmarEliminacion(id, nombre) {
-      // Rellenamos el nombre del producto en el modal
-      document.getElementById('lbl_nombre_producto').innerText = nombre;
-      
-      // Construimos la ruta de eliminación con el ID correspondiente
-      const urlEliminar = `/anacosmeticsy/public/inventario/eliminar/${id}`;
-      document.getElementById('btn_confirmar_eliminar').href = urlEliminar;
-      
-      // Mostramos el modal usando la API nativa de Bootstrap/Tabler
-      const modalEl = document.getElementById('modal-eliminar');
-      const modal = new bootstrap.Modal(modalEl);
-      modal.show();
-    }
+    document.getElementById('lbl_nombre_producto').innerText = nombre;
+    const urlEliminar = `/anacosmeticsy/public/inventario/eliminar/${id}`;
+    document.getElementById('btn_confirmar_eliminar').href = urlEliminar;
+    
+    const modalEl = document.getElementById('modal-eliminar');
+    const modal = new bootstrap.Modal(modalEl);
+    modal.show();
+  }
 </script>
 
 <?php require_once BASE_PATH . 'views/layouts/footer.php'; ?>

@@ -114,4 +114,22 @@ class Cita {
             throw $e;
         }
     }
+
+    public static function obtenerPendientesParaCaja() {
+        $db = Database::connect();
+        $stmt = $db->query("
+            SELECT c.*, 
+                   DATE_FORMAT(c.fecha_cita, '%H:%i') AS hora_cita,
+                   cl.nombre AS cliente_nombre, cl.telefono AS cliente_telefono,
+                   s.id AS servicio_id, s.nombre AS servicio_nombre, 
+                   IF(cs.precio_unitario_usd > 0, cs.precio_unitario_usd, s.precio_usd) AS precio_usd
+            FROM citas c
+            INNER JOIN clientes cl ON c.cliente_id = cl.id
+            INNER JOIN cita_servicios cs ON c.id = cs.cita_id
+            INNER JOIN servicios s ON cs.servicio_id = s.id
+            WHERE c.estado = 'pendiente' AND DATE(c.fecha_cita) = CURDATE()
+            ORDER BY c.fecha_cita ASC
+        ");
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
 }

@@ -30,7 +30,7 @@ class CreditosController {
         $totalPaginas = ceil($totalClientes / $porPagina);
         $clientes = Cliente::obtenerTodos($porPagina, $offset);
 
-        // Si hay clientes, seleccionamos el primero por defecto o el que venga por GET
+        // Cliente seleccionado por defecto o por GET
         $clienteSeleccionadoId = isset($_GET['cliente_id']) ? (int)$_GET['cliente_id'] : (!empty($clientes) ? $clientes[0]['id'] : null);
         
         $clienteActual = null;
@@ -55,10 +55,10 @@ class CreditosController {
 
             $todosLosAbonos = [];
             foreach ($creditos as &$cred) {
+                // Obtenemos los detalles de la venta a crédito
                 $cred['detalles'] = Credito::obtenerDetalles($cred['id']);
                 $abonosCredito = Credito::obtenerAbonos($cred['id']);
                 
-                // Recopilar abonos para la pestaña global de abonos del cliente
                 foreach ($abonosCredito as $ab) {
                     $ab['credito_id_ref'] = $cred['id'];
                     $todosLosAbonos[] = $ab;
@@ -83,9 +83,9 @@ class CreditosController {
                 $tasaUsd = $this->bcvService->getCurrentRate('USD');
 
                 $data = [
-                    'credito_id' => $_POST['credito_id'] ?? null,
+                    'credito_id' => $_POST['credito_id'] ?? null, // ID de la venta a crédito
                     'tasa_bcv'   => $tasaUsd,
-                    'pagos'      => $_POST['pagos'] ?? [] // Recibe el arreglo dinámico de líneas de pago
+                    'pagos'      => $_POST['pagos'] ?? [] 
                 ];
 
                 Credito::registrarAbono($data);
@@ -114,7 +114,6 @@ class CreditosController {
                 $stmt = $db->query("SELECT * FROM clientes ORDER BY nombre ASC LIMIT 10");
                 $clientes = $stmt->fetchAll(PDO::FETCH_ASSOC);
             } else {
-                // Usamos parámetros independientes o comodines concatenados directamente de forma segura con quote() o bind explícito
                 $searchTerm = "%" . $query . "%";
                 $stmt = $db->prepare("SELECT * FROM clientes WHERE nombre LIKE ? OR telefono LIKE ? ORDER BY nombre ASC LIMIT 15");
                 $stmt->execute([$searchTerm, $searchTerm]);

@@ -147,7 +147,7 @@
               <div class="col-6 col-md-3 text-center border-start">
                 <span class="text-uppercase text-muted small fw-bold d-block">Deuda Total Pendiente</span>
                 <span class="fs-2 fw-extrabold text-danger" id="panel-deuda-pendiente">
-                  $<?= $clienteActual ? number_format(array_sum(array_column(array_filter($creditosCliente, function($c){ return $c['estado']=='pendiente'; }), 'saldo_pendiente_usd')), 2) : '0.00' ?>
+                  $<?= $clienteActual ? number_format(array_sum(array_column(array_filter($creditosCliente, function($c){ return floatval($c['saldo_pendiente_usd']) > 0.01; }), 'saldo_pendiente_usd')), 2) : '0.00' ?>
                 </span>
               </div>
               <div class="col-6 col-md-3 text-center border-start">
@@ -195,11 +195,11 @@
                         <div class="card border mb-3 shadow-xs">
                           <div class="card-header bg-light-subtle d-flex justify-content-between align-items-center py-2">
                             <div>
-                              <span class="fw-bold text-dark">Crédito #<?= $cred['id'] ?></span>
+                              <span class="fw-bold text-dark">Venta Crédito #<?= str_pad($cred['id'], 6, '0', STR_PAD_LEFT) ?></span>
                               <span class="text-muted small ms-2">📅 <?= date('d/m/Y H:i', strtotime($cred['created_at'])) ?></span>
                             </div>
                             <div>
-                              <?php if ($cred['estado'] === 'pagado'): ?>
+                              <?php if (floatval($cred['saldo_pendiente_usd']) <= 0.01): ?>
                                 <span class="badge bg-success-lt fw-bold">Pagado</span>
                               <?php else: ?>
                                 <span class="badge bg-warning-lt fw-bold">Pendiente</span>
@@ -217,7 +217,7 @@
                                 <strong class="text-danger">$<?= number_format($cred['saldo_pendiente_usd'], 2) ?></strong>
                               </div>
                               <div class="col-12 col-md-4 text-md-end">
-                                <?php if ($cred['estado'] === 'pendiente'): ?>
+                                <?php if (floatval($cred['saldo_pendiente_usd']) > 0.01): ?>
                                   <button class="btn btn-sm btn-success w-100 w-md-auto" onclick='abrirModalAbono(<?= json_encode($cred) ?>, <?= $tasaUsd ?>)'>
                                     Registrar Abono
                                   </button>
@@ -239,7 +239,6 @@
               <!-- PESTAÑA 2: HISTORIAL DE ABONOS -->
               <div class="tab-pane fade" id="content-abonos" role="tabpanel" aria-labelledby="tab-abonos">
                 <div id="contenedor-historial-abonos" style="min-height: 280px;">
-                  <!-- Rellenado dinámicamente por JavaScript al seleccionar cliente -->
                   <div class="text-center py-5 text-muted">
                     <div>Seleccione un cliente para ver su historial de abonos.</div>
                   </div>
@@ -347,7 +346,7 @@
         <div class="modal-body text-center py-4">
           <svg xmlns="http://www.w3.org/2000/svg" class="icon mb-2 text-danger icon-lg" width="36" height="36" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 9v2m0 4v.01" /><path d="M5.07 19h13.86a1.5 1.5 0 0 0 1.3 -2.25l-6.93 -12a1.5 1.5 0 0 0 -2.6 0l-6.93 12a1.5 1.5 0 0 0 1.3 2.25z" /></svg>
           <h3>¿Anular este Abono?</h3>
-          <p class="text-muted small">El monto abonado será devuelto al saldo pendiente del crédito y se revertirá cualquier excedente aplicado a saldo a favor.</p>
+          <p class="text-muted small">El monto abonado será devuelto al saldo pendiente de la venta y se revertirá cualquier excedente aplicado a saldo a favor.</p>
         </div>
         <div class="modal-footer bg-light py-2">
           <div class="w-100">
@@ -429,7 +428,7 @@
 
         let deudaTotal = 0;
         data.creditos.forEach(c => {
-          if (c.estado === 'pendiente') deudaTotal += parseFloat(c.saldo_pendiente_usd);
+          if (parseFloat(c.saldo_pendiente_usd) > 0.01) deudaTotal += parseFloat(c.saldo_pendiente_usd);
         });
         document.getElementById('panel-deuda-pendiente').innerText = `$${deudaTotal.toFixed(2)}`;
 
@@ -455,19 +454,21 @@
 
     let html = '<div id="lista-creditos-items">';
     creditosPagina.forEach(cred => {
-      const badgeEstado = cred.estado === 'pagado' ? '<span class="badge bg-success-lt fw-bold">Pagado</span>' : '<span class="badge bg-warning-lt fw-bold">Pendiente</span>';
-      const btnAbonar = cred.estado === 'pendiente' ? `<button class="btn btn-sm btn-success w-100 w-md-auto" onclick='abrirModalAbono(${JSON.stringify(cred)}, ${tasaActualBCV})'>Registrar Abono</button>` : '';
+      const saldoPend = parseFloat(cred.saldo_pendiente_usd);
+      const badgeEstado = saldoPend <= 0.01 ? '<span class="badge bg-success-lt fw-bold">Pagado</span>' : '<span class="badge bg-warning-lt fw-bold">Pendiente</span>';
+      const btnAbonar = saldoPend > 0.01 ? `<button class="btn btn-sm btn-success w-100 w-md-auto" onclick='abrirModalAbono(${JSON.stringify(cred)}, ${tasaActualBCV})'>Registrar Abono</button>` : '';
+      const idFormateado = String(cred.id).padStart(6, '0');
 
       html += `
         <div class="card border mb-3 shadow-xs">
           <div class="card-header bg-light-subtle d-flex justify-content-between align-items-center py-2">
-            <div><span class="fw-bold text-dark">Crédito #${cred.id}</span><span class="text-muted small ms-2">📅 ${cred.created_at}</span></div>
+            <div><span class="fw-bold text-dark">Venta Crédito #${idFormateado}</span><span class="text-muted small ms-2">📅 ${cred.created_at}</span></div>
             <div>${badgeEstado}</div>
           </div>
           <div class="card-body p-3">
             <div class="row g-2 align-items-center mb-3">
               <div class="col-6 col-md-4"><span class="text-muted small d-block">Total General:</span><strong class="text-dark">$${parseFloat(cred.total_general_usd).toFixed(2)}</strong></div>
-              <div class="col-6 col-md-4"><span class="text-muted small d-block">Saldo Pendiente:</span><strong class="text-danger">$${parseFloat(cred.saldo_pendiente_usd).toFixed(2)}</strong></div>
+              <div class="col-6 col-md-4"><span class="text-muted small d-block">Saldo Pendiente:</span><strong class="text-danger">$${saldoPend.toFixed(2)}</strong></div>
               <div class="col-12 col-md-4 text-md-end">${btnAbonar}</div>
             </div>
           </div>
@@ -499,12 +500,14 @@
         });
       }
 
+      const idCreditoFormateado = String(ab.credito_id_ref).padStart(6, '0');
+
       html += `
         <div class="card border mb-3 shadow-xs">
           <div class="card-header bg-light-subtle d-flex justify-content-between align-items-center py-2">
             <div>
               <span class="fw-bold text-dark">Abono #${ab.id}</span>
-              <span class="text-muted small ms-2">Aplicado a Crédito #${ab.credito_id_ref}</span>
+              <span class="text-muted small ms-2">Aplicado a Crédito #${idCreditoFormateado}</span>
               <span class="text-muted small ms-2">📅 ${ab.created_at}</span>
             </div>
             <div>
