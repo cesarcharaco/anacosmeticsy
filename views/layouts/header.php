@@ -17,29 +17,23 @@ $tasaActual = $bcvService->getCurrentRate('USD');
     <link href="/anacosmeticsy/public/assets/css/tabler.min.css" rel="stylesheet"/>
 
     <style>
-      /* Estilo de fondo con marca de agua corporativa sutil */
+      /* Estilo de fondo con marca de agua corporativa sutil corregido para modales */
       body.layout-fluid {
-        position: relative;
         background-color: #f8fafc;
-      }
-      body.layout-fluid::before {
-        content: "";
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100vw;
-        height: 100vh;
         background-image: url('/anacosmeticsy/public/assets/img/logo_ana.jpeg');
         background-repeat: no-repeat;
         background-position: center center;
+        background-attachment: fixed;
         background-size: 450px auto;
-        opacity: 0.04; /* Opacidad muy baja estilo marca de agua para no afectar la legibilidad */
-        pointer-events: none;
-        z-index: 0;
       }
-      .page {
-        position: relative;
-        z-index: 1;
+      /* Forzar que la marca de agua tenga una opacidad muy sutil sobre el fondo sin bloquear clics */
+      body.layout-fluid::before {
+        content: "";
+        position: fixed;
+        inset: 0;
+        background-color: rgba(248, 250, 252, 0.96); /* Tapa el fondo con blanco translúcido para proteger la legibilidad */
+        pointer-events: none;
+        z-index: -1;
       }
     </style>
   </head>
