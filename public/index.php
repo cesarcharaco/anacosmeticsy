@@ -4,21 +4,12 @@
 // Iniciar sesión para control de usuarios
 session_start();
 
-// Definir rutas base del sistema para archivos (PHP)
+// Ruta física del proyecto: carpeta superior a public.
 define('BASE_PATH', dirname(__DIR__) . '/');
 
-// -----------------------------------------------------------------------------
-// AUTODETECCIÓN DINÁMICA DE LA URL BASE (Local y Producción)
-// -----------------------------------------------------------------------------
-$protocol = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https://' : 'http://';
-$host = $_SERVER['HTTP_HOST'];
+// URL pública de producción, sin /public y sin barra final.
+define('BASE_URL', 'https://anacosmeticsy.yermotorsca.com');
 
-// Detecta el directorio raíz web de forma automática (ej. /anacosmeticsy/public en local o vacío/raíz en servidor)
-$scriptDir = str_replace('\\', '/', dirname($_SERVER['SCRIPT_NAME']));
-$baseUrl = rtrim($protocol . $host . str_replace('/public', '', $scriptDir), '/');
-
-// Definir BASE_URL para los recursos estáticos (CSS, JS, Imágenes y Enlaces)
-define('BASE_URL', $baseUrl);
 
 // Cargar configuración de base de datos
 require_once BASE_PATH . 'app/Config/Database.php';
