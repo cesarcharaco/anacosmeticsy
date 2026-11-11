@@ -11,16 +11,16 @@ $tasaActual = $bcvService->getCurrentRate('USD');
     <title>Ana Boutique Cosmetics, C.A. — Sistema de Gestión</title>
     
     <!-- Favicon de la Empresa -->
-    <link rel="icon" href="/anacosmeticsy/public/assets/img/logo_ana.ico" type="image/x-icon"/>
+    <link rel="icon" href="/assets/img/logo_ana.ico" type="image/x-icon"/>
     
     <!-- CSS Local de Tabler (Offline) -->
-    <link href="/anacosmeticsy/public/assets/css/tabler.min.css" rel="stylesheet"/>
+    <link href="/assets/css/tabler.min.css" rel="stylesheet"/>
 
     <style>
       /* Estilo de fondo con marca de agua corporativa sutil corregido para modales */
       body.layout-fluid {
         background-color: #f8fafc;
-        background-image: url('/anacosmeticsy/public/assets/img/logo_ana.jpeg');
+        background-image: url('/assets/img/logo_ana.jpeg');
         background-repeat: no-repeat;
         background-position: center center;
         background-attachment: fixed;
