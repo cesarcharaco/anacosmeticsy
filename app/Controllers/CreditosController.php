@@ -21,7 +21,6 @@ class CreditosController {
         $tasaUsd = $this->bcvService->getCurrentRate('USD');
         $tasaActual = $tasaUsd;
 
-        // Paginación de clientes para el panel izquierdo
         $porPagina = 10;
         $paginaActual = isset($_GET['p']) ? max(1, (int)$_GET['p']) : 1;
         $offset = ($paginaActual - 1) * $porPagina;
@@ -30,7 +29,6 @@ class CreditosController {
         $totalPaginas = ceil($totalClientes / $porPagina);
         $clientes = Cliente::obtenerTodos($porPagina, $offset);
 
-        // Cliente seleccionado por defecto o por GET
         $clienteSeleccionadoId = isset($_GET['cliente_id']) ? (int)$_GET['cliente_id'] : (!empty($clientes) ? $clientes[0]['id'] : null);
         
         $clienteActual = null;
@@ -55,7 +53,6 @@ class CreditosController {
 
             $todosLosAbonos = [];
             foreach ($creditos as &$cred) {
-                // Obtenemos los detalles de la venta a crédito
                 $cred['detalles'] = Credito::obtenerDetalles($cred['id']);
                 $abonosCredito = Credito::obtenerAbonos($cred['id']);
                 
@@ -77,13 +74,33 @@ class CreditosController {
         exit;
     }
 
+    // Método para generar el reporte imprimible de deuda pendiente
+    public function reporteDeuda($clienteId) {
+        $clienteId = filter_var($clienteId, FILTER_VALIDATE_INT);
+        if (!$clienteId) {
+            die("Cliente no válido.");
+        }
+
+        $tasaUsd = $this->bcvService->getCurrentRate('USD');
+        $cliente = Cliente::obtenerPorId($clienteId);
+        $creditosPendientes = Credito::obtenerReportePendientesCliente($clienteId);
+
+        require_once BASE_PATH . 'views/creditos/reporte_deuda.php';
+    }
+
     public function abonar() {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $clienteIdRedirect = $_POST['cliente_id_redirect'] ?? '';
             try {
                 $tasaUsd = $this->bcvService->getCurrentRate('USD');
+                $creditoId = filter_var($_POST['credito_id'] ?? null, FILTER_VALIDATE_INT);
+
+                if (!$creditoId) {
+                    throw new Exception("No se especificó un crédito válido para aplicar el abono.");
+                }
 
                 $data = [
-                    'credito_id' => $_POST['credito_id'] ?? null, // ID de la venta a crédito
+                    'credito_id' => $creditoId,
                     'tasa_bcv'   => $tasaUsd,
                     'pagos'      => $_POST['pagos'] ?? [] 
                 ];
@@ -91,16 +108,14 @@ class CreditosController {
                 Credito::registrarAbono($data);
                 $_SESSION['mensaje'] = "¡Abono registrado exitosamente!";
                 
-                $clienteIdRedirect = $_POST['cliente_id_redirect'] ?? '';
                 header('Location: /anacosmeticsy/public/creditos' . ($clienteIdRedirect ? "?cliente_id=$clienteIdRedirect" : ''));
                 exit;
 
             } catch (Exception $e) {
                 $_SESSION['error'] = $e->getMessage();
+                header('Location: /anacosmeticsy/public/creditos' . ($clienteIdRedirect ? "?cliente_id=$clienteIdRedirect" : ''));
+                exit;
             }
-
-            header('Location: /anacosmeticsy/public/creditos');
-            exit;
         }
     }
 
@@ -132,9 +147,9 @@ class CreditosController {
 
     public function anularAbono() {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $clienteIdRedirect = $_POST['cliente_id_redirect'] ?? '';
             try {
                 $abonoId = $_POST['abono_id'] ?? null;
-                $clienteIdRedirect = $_POST['cliente_id_redirect'] ?? '';
 
                 Credito::anularAbono($abonoId);
                 $_SESSION['mensaje'] = "¡Abono anulado exitosamente y saldos revertidos!";
@@ -144,10 +159,9 @@ class CreditosController {
 
             } catch (Exception $e) {
                 $_SESSION['error'] = $e->getMessage();
+                header('Location: /anacosmeticsy/public/creditos' . ($clienteIdRedirect ? "?cliente_id=$clienteIdRedirect" : ''));
+                exit;
             }
-
-            header('Location: /anacosmeticsy/public/creditos');
-            exit;
         }
     }
 }

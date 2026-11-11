@@ -39,8 +39,12 @@
         
         <!-- 1. Selección de Cliente -->
         <div class="card shadow-sm border-0 rounded-3 mb-3">
-          <div class="card-header bg-light py-2">
+          <div class="card-header bg-light py-2 d-flex justify-content-between align-items-center">
             <h3 class="card-title fw-bold mb-0">1. Cliente Facturado</h3>
+            <button type="button" class="btn btn-sm btn-primary d-flex align-items-center gap-1" data-bs-toggle="modal" data-bs-target="#modal-nuevo-cliente-pos">
+              <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="16" height="16" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 5l0 14" /><path d="M5 12l14 0" /></svg>
+              Nuevo Cliente
+            </button>
           </div>
           <div class="card-body p-3">
             <div class="row g-2 align-items-center">
@@ -308,6 +312,38 @@
   </div>
 </div>
 
+<!-- Modal Registrar Nuevo Cliente (POS) -->
+<div class="modal modal-blur fade" id="modal-nuevo-cliente-pos" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content shadow-lg border-0 rounded-3">
+      <form id="form-nuevo-cliente-pos" onsubmit="registrarClientePos(event)">
+        <div class="modal-header bg-light">
+          <h5 class="modal-title fw-bold text-dark">Registrar Nuevo Cliente</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body p-4">
+          <div class="mb-3">
+            <label class="form-label fw-bold required">Nombre Completo</label>
+            <input type="text" class="form-control" id="nuevo-cli-nombre" placeholder="Ej. María Pérez" required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label fw-bold">Teléfono</label>
+            <input type="text" class="form-control" id="nuevo-cli-telefono" placeholder="Ej. 0414-1234567">
+          </div>
+          <div class="mb-3">
+            <label class="form-label fw-bold">Dirección</label>
+            <textarea class="form-control" id="nuevo-cli-direccion" rows="2" placeholder="Dirección opcional"></textarea>
+          </div>
+        </div>
+        <div class="modal-footer bg-light py-2">
+          <button type="button" class="btn btn-secondary px-3" data-bs-dismiss="modal">Cancelar</button>
+          <button type="submit" class="btn btn-primary px-4" id="btn-guardar-cliente">Guardar Cliente</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
 <script>
   let tasaActualBCV = <?= floatval($tasaUsd) ?>;
   let carritoItems = [];
@@ -324,6 +360,76 @@
     const option = select.options[select.selectedIndex];
     const saldoFavor = option ? parseFloat(option.getAttribute('data-saldo')) || 0 : 0;
     document.getElementById('lbl-saldo-favor-cliente').innerText = `$${saldoFavor.toFixed(2)}`;
+  }
+
+  function registrarClientePos(event) {
+    event.preventDefault();
+    
+    const nombre = document.getElementById('nuevo-cli-nombre').value.trim();
+    const telefono = document.getElementById('nuevo-cli-telefono').value.trim();
+    const direccion = document.getElementById('nuevo-cli-direccion').value.trim();
+
+    if (!nombre) {
+      Swal.fire({ icon: 'warning', title: 'Atención', text: 'El nombre del cliente es obligatorio.', confirmButtonColor: '#206bc4' });
+      return;
+    }
+
+    const btnGuardar = document.getElementById('btn-guardar-cliente');
+    btnGuardar.disabled = true;
+    btnGuardar.innerText = 'Guardando...';
+
+    // Se asume la ruta estándar del controlador de clientes para inserción asíncrona
+    fetch('/anacosmeticsy/public/clientes/guardarAjax', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ nombre, telefono, direccion })
+    })
+    .then(res => res.json())
+    .then(data => {
+      btnGuardar.disabled = false;
+      btnGuardar.innerText = 'Guardar Cliente';
+
+      if (!data.success) {
+        Swal.fire({ icon: 'error', title: 'Error', text: data.message || 'No se pudo registrar el cliente.', confirmButtonColor: '#d63939' });
+        return;
+      }
+
+      // Cerrar modal
+      const modalEl = document.getElementById('modal-nuevo-cliente-pos');
+      const modalInstance = bootstrap.Modal.getInstance(modalEl) || new bootstrap.Modal(modalEl);
+      modalInstance.hide();
+      document.getElementById('form-nuevo-cliente-pos').reset();
+
+      // Agregar el nuevo cliente al select de forma dinámica y seleccionarlo
+      const select = document.getElementById('select-cliente-pos');
+      const nuevoId = data.cliente_id;
+      const nuevoSaldo = 0.00;
+
+      const opt = document.createElement('option');
+      opt.value = nuevoId;
+      opt.setAttribute('data-nombre', nombre);
+      opt.setAttribute('data-telefono', telefono);
+      opt.setAttribute('data-saldo', nuevoSaldo);
+      opt.text = `${nombre} (📞 ${telefono || 'Sin telf'}) - Saldo Favor: $0.00`;
+      
+      select.appendChild(opt);
+      select.value = nuevoId;
+      seleccionarCliente(select);
+
+      Swal.fire({
+        icon: 'success',
+        title: '¡Cliente Registrado!',
+        text: 'El cliente ha sido agregado y seleccionado exitosamente.',
+        timer: 1800,
+        showConfirmButton: false
+      });
+    })
+    .catch(err => {
+      console.error(err);
+      btnGuardar.disabled = false;
+      btnGuardar.innerText = 'Guardar Cliente';
+      Swal.fire({ icon: 'error', title: 'Error de Red', text: 'Ocurrió un error al comunicarse con el servidor.', confirmButtonColor: '#d63939' });
+    });
   }
 
   function importarCitaACarrito(cita) {

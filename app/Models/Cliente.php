@@ -69,12 +69,17 @@ class Cliente {
             VALUES (:nombre, :telefono, :direccion, :saldo_favor_usd)
         ");
         
-        return $stmt->execute([
+        $ejecutado = $stmt->execute([
             'nombre'          => $nombre,
             'telefono'        => $telefono,
             'direccion'       => $direccion,
             'saldo_favor_usd' => round($saldoFavor, 2)
         ]);
+
+        if ($ejecutado) {
+            return (int) $db->lastInsertId();
+        }
+        return false;
     }
 
     public static function actualizar($id, $data) {

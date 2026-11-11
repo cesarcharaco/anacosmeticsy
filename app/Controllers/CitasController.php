@@ -21,10 +21,17 @@ class CitasController {
         $tasaUsd = $this->bcvService->getCurrentRate('USD');
         
         $servicios = Servicio::obtenerTodos();
-        $citas = Cita::obtenerTodas();
+        $citasRaw = Cita::obtenerTodas();
         
+        // Inyectar servicios específicos a cada cita
+        $citas = [];
+        foreach ($citasRaw as $cita) {
+            $cita['servicios'] = Cita::obtenerServiciosDeCita($cita['id']);
+            $citas[] = $cita;
+        }
+
         require_once BASE_PATH . 'app/Models/Cliente.php';
-        $clientes = Cliente::obtenerTodos(100, 0); // Traemos una lista amplia para el selector del modal
+        $clientes = Cliente::obtenerTodos(100, 0);
 
         require_once BASE_PATH . 'views/citas/index.php';
     }
@@ -32,23 +39,14 @@ class CitasController {
     public function guardarCita() {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             try {
-                // 1. Validar cliente obligatorio
                 $clienteId = filter_var($_POST['cliente_id'] ?? null, FILTER_VALIDATE_INT);
-                if (!$clienteId) {
-                    throw new Exception("Debe seleccionar un cliente válido para agendar la cita.");
-                }
+                if (!$clienteId) throw new Exception("Debe seleccionar un cliente válido.");
 
-                // 2. Validar fecha y hora obligatoria
                 $fechaCita = trim($_POST['fecha_cita'] ?? '');
-                if (empty($fechaCita)) {
-                    throw new Exception("La fecha y hora de la cita son obligatorias.");
-                }
+                if (empty($fechaCita)) throw new Exception("La fecha y hora son obligatorias.");
 
-                // 3. Validar arreglo de servicios del carrito
                 $servicios = $_POST['servicios'] ?? [];
-                if (!is_array($servicios) || empty($servicios)) {
-                    throw new Exception("Debe agregar al menos un servicio al carrito de la cita.");
-                }
+                if (!is_array($servicios) || empty($servicios)) throw new Exception("Debe agregar al menos un servicio.");
 
                 $data = [
                     'cliente_id'    => $clienteId,
@@ -57,15 +55,41 @@ class CitasController {
                     'observaciones' => trim($_POST['observaciones'] ?? '')
                 ];
 
-                // Ejecutamos la creación transaccional
                 Cita::crearConServicios($data, $servicios);
-
-                $_SESSION['mensaje'] = "¡Cita agendada exitosamente en el sistema!";
-
+                $_SESSION['mensaje'] = "¡Cita agendada exitosamente!";
             } catch (Exception $e) {
                 $_SESSION['error'] = $e->getMessage();
             }
+            header('Location: /anacosmeticsy/public/citas');
+            exit;
+        }
+    }
 
+    public function cancelarCita($id) {
+        try {
+            Cita::cancelar($id);
+            $_SESSION['mensaje'] = "La cita ha sido cancelada exitosamente.";
+        } catch (Exception $e) {
+            $_SESSION['error'] = $e->getMessage();
+        }
+        header('Location: /anacosmeticsy/public/citas');
+        exit;
+    }
+
+    public function reagendarCita() {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            try {
+                $id = filter_var($_POST['cita_id'] ?? null, FILTER_VALIDATE_INT);
+                $nuevaFecha = trim($_POST['nueva_fecha_cita'] ?? '');
+
+                if (!$id) throw new Exception("ID de cita inválido.");
+                if (empty($nuevaFecha)) throw new Exception("Debe indicar la nueva fecha y hora.");
+
+                Cita::reagendar($id, $nuevaFecha);
+                $_SESSION['mensaje'] = "¡La cita ha sido reagendada exitosamente!";
+            } catch (Exception $e) {
+                $_SESSION['error'] = $e->getMessage();
+            }
             header('Location: /anacosmeticsy/public/citas');
             exit;
         }
@@ -75,41 +99,20 @@ class CitasController {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             try {
                 $nombre = trim($_POST['nombre'] ?? '');
-                if (empty($nombre)) {
-                    throw new Exception("El nombre del servicio es obligatorio.");
-                }
-                if (strlen($nombre) > 150) {
-                    throw new Exception("El nombre del servicio no puede superar los 150 caracteres.");
-                }
+                if (empty($nombre)) throw new Exception("El nombre del servicio es obligatorio.");
 
-                $descripcion = trim($_POST['descripcion'] ?? '');
-                if (strlen($descripcion) > 500) {
-                    throw new Exception("La descripción es demasiado larga (máximo 500 caracteres).");
-                }
+                $precioUsd = filter_var($_POST['precio_usd'] ?? '', FILTER_VALIDATE_FLOAT);
+                if ($precioUsd === false || $precioUsd < 0) throw new Exception("Precio en USD inválido.");
 
-                $precioRaw = $_POST['precio_usd'] ?? '';
-                if ($precioRaw === '' || !is_numeric($precioRaw)) {
-                    throw new Exception("Debe ingresar un precio válido en dólares.");
-                }
-                
-                $precioUsd = filter_var($precioRaw, FILTER_VALIDATE_FLOAT);
-                if ($precioUsd === false || $precioUsd < 0) {
-                    throw new Exception("El precio en USD no puede ser negativo.");
-                }
-
-                $data = [
+                Servicio::crear([
                     'nombre'      => $nombre,
-                    'descripcion' => $descripcion,
+                    'descripcion' => trim($_POST['descripcion'] ?? ''),
                     'precio_usd'  => round($precioUsd, 2)
-                ];
-
-                Servicio::crear($data);
-                $_SESSION['mensaje'] = "¡Servicio registrado exitosamente en el catálogo!";
-
+                ]);
+                $_SESSION['mensaje'] = "¡Servicio registrado exitosamente!";
             } catch (Exception $e) {
                 $_SESSION['error'] = $e->getMessage();
             }
-
             header('Location: /anacosmeticsy/public/citas');
             exit;
         }
@@ -119,21 +122,19 @@ class CitasController {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             try {
                 $id = filter_var($_POST['id'] ?? null, FILTER_VALIDATE_INT);
-                if (!$id) throw new Exception("ID de servicio no válido.");
+                if (!$id) throw new Exception("ID no válido.");
 
                 $nombre = trim($_POST['nombre'] ?? '');
-                if (empty($nombre)) throw new Exception("El nombre del servicio es obligatorio.");
+                if (empty($nombre)) throw new Exception("Nombre obligatorio.");
 
                 $precioUsd = filter_var($_POST['precio_usd'] ?? '', FILTER_VALIDATE_FLOAT);
-                if ($precioUsd === false || $precioUsd < 0) throw new Exception("Precio en USD inválido.");
+                if ($precioUsd === false || $precioUsd < 0) throw new Exception("Precio inválido.");
 
-                $data = [
+                Servicio::actualizar($id, [
                     'nombre'      => $nombre,
                     'descripcion' => trim($_POST['descripcion'] ?? ''),
                     'precio_usd'  => round($precioUsd, 2)
-                ];
-
-                Servicio::actualizar($id, $data);
+                ]);
                 $_SESSION['mensaje'] = "Servicio actualizado correctamente.";
             } catch (Exception $e) {
                 $_SESSION['error'] = $e->getMessage();
@@ -146,7 +147,7 @@ class CitasController {
     public function eliminarServicio($id) {
         try {
             $id = filter_var($id, FILTER_VALIDATE_INT);
-            if (!$id) throw new Exception("ID de servicio no válido.");
+            if (!$id) throw new Exception("ID no válido.");
 
             Servicio::eliminar($id);
             $_SESSION['mensaje'] = "Servicio eliminado del catálogo.";

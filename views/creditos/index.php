@@ -131,11 +131,11 @@
       <!-- PANEL DERECHO: Estado Financiero y Pestañas -->
       <div class="col-12 col-lg-8">
         
-        <!-- Tarjeta Superior: Estado de Crédito y Saldo a Favor -->
+        <!-- Tarjeta Superior: Estado de Crédito, Saldo a Favor y Botón de Reporte -->
         <div class="card shadow-sm border-0 rounded-3 mb-3 bg-light-subtle">
           <div class="card-body p-3 p-md-4">
             <div class="row align-items-center g-3">
-              <div class="col-12 col-md-6">
+              <div class="col-12 col-md-5">
                 <span class="text-uppercase text-muted small fw-bold d-block mb-1">Cliente Seleccionado</span>
                 <h2 class="fw-extrabold text-dark mb-0" id="panel-nombre-cliente">
                   <?= $clienteActual ? htmlspecialchars($clienteActual['nombre']) : 'Seleccione un cliente' ?>
@@ -144,17 +144,23 @@
                   <?= $clienteActual ? '📞 ' . htmlspecialchars($clienteActual['telefono'] ?? 'Sin teléfono') : '' ?>
                 </div>
               </div>
-              <div class="col-6 col-md-3 text-center border-start">
-                <span class="text-uppercase text-muted small fw-bold d-block">Deuda Total Pendiente</span>
-                <span class="fs-2 fw-extrabold text-danger" id="panel-deuda-pendiente">
+              <div class="col-6 col-md-2 text-center border-start">
+                <span class="text-uppercase text-muted small fw-bold d-block">Deuda Pend.</span>
+                <span class="fs-3 fw-extrabold text-danger" id="panel-deuda-pendiente">
                   $<?= $clienteActual ? number_format(array_sum(array_column(array_filter($creditosCliente, function($c){ return floatval($c['saldo_pendiente_usd']) > 0.01; }), 'saldo_pendiente_usd')), 2) : '0.00' ?>
                 </span>
               </div>
-              <div class="col-6 col-md-3 text-center border-start">
-                <span class="text-uppercase text-muted small fw-bold d-block">Saldo a Favor Disponible</span>
-                <span class="fs-2 fw-extrabold text-success" id="panel-saldo-favor">
+              <div class="col-6 col-md-2 text-center border-start">
+                <span class="text-uppercase text-muted small fw-bold d-block">Saldo Favor</span>
+                <span class="fs-3 fw-extrabold text-success" id="panel-saldo-favor">
                   $<?= $clienteActual ? number_format($clienteActual['saldo_favor_usd'], 2) : '0.00' ?>
                 </span>
+              </div>
+              <div class="col-12 col-md-3 text-md-end border-start">
+                <a id="btn-generar-reporte" href="<?= $clienteSeleccionadoId ? '/anacosmeticsy/public/creditos/reporteDeuda/' . $clienteSeleccionadoId : '#' ?>" target="_blank" class="btn btn-outline-primary w-100 d-flex align-items-center justify-content-center gap-1 shadow-xs">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="18" height="18" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M17 17h2a2 2 0 0 0 2 -2v-4a2 2 0 0 0 -2 -2h-14a2 2 0 0 0 -2 2v4a2 2 0 0 0 2 2h2" /><path d="M17 9v-4a2 2 0 0 0 -2 -2h-6a2 2 0 0 0 -2 2v4" /><path d="M7 13m0 2a2 2 0 0 1 2 -2h6a2 2 0 0 1 2 2v4a2 2 0 0 1 -2 2h-6a2 2 0 0 1 -2 -2z" /></svg>
+                  Imprimir Reporte
+                </a>
               </div>
             </div>
           </div>
@@ -374,6 +380,13 @@
   const porPaginaHistorial = 5;
   let contadorLineaPago = 0;
 
+  document.addEventListener("DOMContentLoaded", function() {
+    if (clienteIdActual) {
+      const filaActiva = document.querySelector(`.fila-cliente-credito[onclick*="cargarHistorialCliente(${clienteIdActual}"]`) || document.querySelector('.fila-cliente-credito');
+      cargarHistorialCliente(clienteIdActual, filaActiva);
+    }
+  });
+
   function buscarClientesGlobal(query) {
     query = query.trim();
     const paginacionFooter = document.getElementById('paginacion-clientes-footer');
@@ -416,6 +429,12 @@
     
     document.querySelectorAll('.fila-cliente-credito').forEach(f => f.classList.remove('table-active', 'border-start', 'border-4', 'border-yellow'));
     if (elementoFila) elementoFila.classList.add('table-active', 'border-start', 'border-4', 'border-yellow');
+
+    // Actualizar enlace del botón de reporte dinámicamente
+    const btnReporte = document.getElementById('btn-generar-reporte');
+    if (btnReporte) {
+      btnReporte.href = `/anacosmeticsy/public/creditos/reporteDeuda/${clienteId}`;
+    }
 
     fetch(`/anacosmeticsy/public/creditos/obtenerHistorialCliente/${clienteId}`)
       .then(res => res.json())
@@ -532,7 +551,8 @@
   }
 
   function abrirModalAbono(credito, tasa) {
-    document.getElementById('abono-credito-id').value = credito.id;
+    const creditoIdVal = credito.id || credito.credito_id;
+    document.getElementById('abono-credito-id').value = creditoIdVal;
     document.getElementById('abono-cliente-id-redirect').value = clienteIdActual;
     document.getElementById('lbl-abono-saldo').innerText = `$${parseFloat(credito.saldo_pendiente_usd).toFixed(2)}`;
     document.getElementById('input-saldo-pendiente-actual').value = credito.saldo_pendiente_usd;
@@ -618,6 +638,12 @@
   }
 
   function validarFormularioAbono(event) {
+    const creditoIdVal = document.getElementById('abono-credito-id').value;
+    if (!creditoIdVal) {
+      alert("Error: No se ha vinculado ningún crédito para este abono.");
+      event.preventDefault();
+      return false;
+    }
     if (document.querySelectorAll('#tabla-pagos-body tr').length === 0) {
       alert("Debe agregar al menos una forma de pago.");
       event.preventDefault();

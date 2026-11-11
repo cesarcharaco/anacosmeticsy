@@ -33,27 +33,60 @@ class Cita {
         return $stmt->fetchAll();
     }
 
+    public static function obtenerServiciosDeCita($citaId) {
+        $db = Database::connect();
+        $stmt = $db->prepare("
+            SELECT s.nombre, s.precio_usd 
+            FROM cita_servicios cs
+            INNER JOIN servicios s ON cs.servicio_id = s.id
+            WHERE cs.cita_id = :cita_id
+        ");
+        $stmt->execute(['cita_id' => $citaId]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public static function cancelar($id) {
+        $db = Database::connect();
+        $id = filter_var($id, FILTER_VALIDATE_INT);
+        if (!$id) throw new Exception("ID de cita no válido.");
+
+        $stmt = $db->prepare("UPDATE citas SET estado = 'cancelada' WHERE id = :id");
+        return $stmt->execute(['id' => $id]);
+    }
+
+    public static function reagendar($id, $nuevaFecha) {
+        $db = Database::connect();
+        $id = filter_var($id, FILTER_VALIDATE_INT);
+        if (!$id) throw new Exception("ID de cita no válido.");
+
+        if (empty($nuevaFecha) || strtotime($nuevaFecha) < time()) {
+            throw new Exception("La nueva fecha y hora de la cita no pueden ser en el pasado.");
+        }
+
+        $stmt = $db->prepare("UPDATE citas SET fecha_cita = :fecha_cita, estado = 'pendiente' WHERE id = :id");
+        return $stmt->execute([
+            'id' => $id,
+            'fecha_cita' => $nuevaFecha
+        ]);
+    }
+
     public static function crearConServicios($data, $serviciosIds) {
         $db = Database::connect();
         
         try {
-            // Iniciamos transacción para asegurar consistencia atómica
             $db->beginTransaction();
 
-            // 1. Validar que el cliente exista
             $stmtCli = $db->prepare("SELECT id FROM clientes WHERE id = :id");
             $stmtCli->execute(['id' => $data['cliente_id']]);
             if (!$stmtCli->fetch()) {
                 throw new Exception("El cliente seleccionado no es válido o no existe en el sistema.");
             }
 
-            // 2. Validar fecha posterior al momento actual
             $fechaCita = $data['fecha_cita'];
             if (strtotime($fechaCita) < time()) {
                 throw new Exception("No se pueden programar citas en fechas u horas pasadas.");
             }
 
-            // 3. Calcular el total real consultando los servicios desde la BD (evita manipulación de precios en frontend)
             $totalRealUsd = 0;
             $serviciosValidos = [];
 
@@ -73,7 +106,6 @@ class Cita {
                 throw new Exception("Debe seleccionar al menos un servicio válido para la cita.");
             }
 
-            // 4. Insertar la Cita Principal
             $stmtCita = $db->prepare("
                 INSERT INTO citas (cliente_id, usuario_id, fecha_cita, estado, total_estimado_usd, observaciones)
                 VALUES (:cliente_id, :usuario_id, :fecha_cita, 'pendiente', :total_estimado_usd, :observaciones)
@@ -89,7 +121,6 @@ class Cita {
 
             $citaId = $db->lastInsertId();
 
-            // 5. Insertar la relación en la tabla pivote (cita_servicios)
             $stmtPivote = $db->prepare("
                 INSERT INTO cita_servicios (cita_id, servicio_id) 
                 VALUES (:cita_id, :servicio_id)
@@ -102,12 +133,10 @@ class Cita {
                 ]);
             }
 
-            // Confirmar transacción
             $db->commit();
             return $citaId;
 
         } catch (Exception $e) {
-            // Revertir cambios si algo falla
             if ($db->inTransaction()) {
                 $db->rollBack();
             }

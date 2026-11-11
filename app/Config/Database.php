@@ -8,7 +8,9 @@ class Database {
     private static $pass = '';
     private static $charset = 'utf8mb4';
     private static $pdo = null;
-
+    //bd:yerm0726_anacosmeticsy
+    //user:yerm0726_anacosmeticsy
+    //contraeña:Anacosmeticsy26
     public static function connect() {
         if (self::$pdo === null) {
             $dsn = "mysql:host=" . self::$host . ";dbname=" . self::$db . ";charset=" . self::$charset;

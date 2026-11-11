@@ -7,7 +7,6 @@ class Credito {
 
     public static function obtenerTodos() {
         $db = Database::connect();
-        // Consultamos las ventas que fueron procesadas a crédito directo
         $stmt = $db->query("
             SELECT v.id, v.cliente_id, v.usuario_id, v.total_general_usd, 
                    v.monto_abonado_credito_usd AS abono_inicial_usd, 
@@ -97,36 +96,55 @@ class Credito {
         return $abonos;
     }
 
-    /**
-     * Registrar abono a una venta a crédito, actualizando el saldo pendiente en la venta
-     * y descontando la deuda actual del cliente.
-     */
+    // Nuevo método específico para el reporte impreso de deudas pendientes y sus abonos
+    public static function obtenerReportePendientesCliente($clienteId) {
+        $db = Database::connect();
+        $stmt = $db->prepare("
+            SELECT v.id, v.total_general_usd, v.monto_pendiente_credito_usd AS saldo_pendiente_usd, v.created_at
+            FROM ventas v
+            WHERE v.cliente_id = :cliente_id AND v.tipo_venta = 'credito' AND v.monto_pendiente_credito_usd > 0.01
+            ORDER BY v.created_at ASC
+        ");
+        $stmt->execute(['cliente_id' => $clienteId]);
+        $creditosPendientes = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        foreach ($creditosPendientes as &$cred) {
+            $cred['detalles'] = self::obtenerDetalles($cred['id']);
+            $cred['abonos'] = self::obtenerAbonos($cred['id']);
+        }
+
+        return $creditosPendientes;
+    }
+
     public static function registrarAbono($data) {
         $db = Database::connect();
         
         try {
             $db->beginTransaction();
 
-            $creditoId = filter_var($data['credito_id'], FILTER_VALIDATE_INT);
-            $tasaBcv = filter_var($data['tasa_bcv'], FILTER_VALIDATE_FLOAT);
+            $creditoId = filter_var($data['credito_id'] ?? null, FILTER_VALIDATE_INT);
+            $tasaBcv = filter_var($data['tasa_bcv'] ?? 0, FILTER_VALIDATE_FLOAT);
             $pagos = $data['pagos'] ?? []; 
             $usuarioId = $_SESSION['user_id'] ?? 1;
 
-            if (!$creditoId || empty($pagos) || !is_array($pagos)) {
-                throw new Exception("Datos de abono inválidos o estructura de pagos vacía.");
+            if (!$creditoId) {
+                throw new Exception("El identificador del crédito es inválido o no fue recibido.");
+            }
+
+            if (empty($pagos) || !is_array($pagos)) {
+                throw new Exception("Estructura de pagos vacía o inválida.");
             }
 
             if (!$tasaBcv || $tasaBcv <= 0) {
                 throw new Exception("Tasa BCV inválida para procesar conversiones.");
             }
 
-            // 1. Obtener y bloquear la venta a crédito
             $stmtCred = $db->prepare("SELECT * FROM ventas WHERE id = :id AND tipo_venta = 'credito' FOR UPDATE");
             $stmtCred->execute(['id' => $creditoId]);
             $credito = $stmtCred->fetch();
 
             if (!$credito) {
-                throw new Exception("El registro de crédito especificado no existe.");
+                throw new Exception("El registro de crédito especificado no existe en el sistema.");
             }
 
             $saldoPendiente = floatval($credito['monto_pendiente_credito_usd']);
@@ -137,7 +155,6 @@ class Credito {
             $montoTotalAbonadoUsd = 0.00;
             $detallesParaInsertar = [];
 
-            // 2. Procesar métodos de pago múltiples
             foreach ($pagos as $pago) {
                 $montoIngresado = filter_var($pago['monto'] ?? 0, FILTER_VALIDATE_FLOAT);
                 $metodoPago = trim($pago['metodo'] ?? '');
@@ -171,7 +188,6 @@ class Credito {
                 throw new Exception("El monto total abonado debe ser mayor a cero.");
             }
 
-            // 3. Registrar cabecera del abono
             $metodoPrincipal = $detallesParaInsertar[0]['metodo_pago'];
             $referenciaPrincipal = $detallesParaInsertar[0]['referencia'];
 
@@ -189,7 +205,6 @@ class Credito {
             ]);
             $creditosAbonoId = $db->lastInsertId();
 
-            // 4. Registrar detalles de abono
             $stmtDetalle = $db->prepare("
                 INSERT INTO creditos_abono_detalles (creditos_abono_id, metodo_pago, monto_ingresado, monto_equivalente_usd, tasa_bcv, referencia)
                 VALUES (:abono_id, :metodo_pago, :monto_ingresado, :monto_equivalente_usd, :tasa_bcv, :referencia)
@@ -206,7 +221,6 @@ class Credito {
                 ]);
             }
 
-            // 5. Calcular nuevo saldo pendiente y excedentes
             $exceso = 0.00;
             if ($montoTotalAbonadoUsd >= $saldoPendiente) {
                 $exceso = round($montoTotalAbonadoUsd - $saldoPendiente, 2);
@@ -217,7 +231,6 @@ class Credito {
                 $montoDescontarDeuda = $montoTotalAbonadoUsd;
             }
 
-            // 6. Actualizar la venta a crédito (saldo pendiente)
             $stmtUpd = $db->prepare("
                 UPDATE ventas 
                 SET monto_pendiente_credito_usd = :saldo_pendiente 
@@ -228,7 +241,6 @@ class Credito {
                 'id'              => $creditoId
             ]);
 
-            // 7. Actualizar el perfil del cliente (reducir deuda y sumar excedente a saldo a favor si aplica)
             if ($montoDescontarDeuda > 0) {
                 $stmtCliDeuda = $db->prepare("UPDATE clientes SET deuda_actual_usd = GREATEST(0, deuda_actual_usd - :descuento) WHERE id = :cliente_id");
                 $stmtCliDeuda->execute(['descuento' => $montoDescontarDeuda, 'cliente_id' => $credito['cliente_id']]);
@@ -261,7 +273,6 @@ class Credito {
                 throw new Exception("ID de abono inválido.");
             }
 
-            // 1. Obtener datos del abono
             $stmtAbono = $db->prepare("SELECT * FROM creditos_abonos WHERE id = :id FOR UPDATE");
             $stmtAbono->execute(['id' => $abonoId]);
             $abono = $stmtAbono->fetch();
@@ -273,7 +284,6 @@ class Credito {
             $creditoId = $abono['credito_id'];
             $montoAbonoUsd = floatval($abono['monto_abono_usd']);
 
-            // 2. Obtener venta asociada
             $stmtCred = $db->prepare("SELECT * FROM ventas WHERE id = :id AND tipo_venta = 'credito' FOR UPDATE");
             $stmtCred->execute(['id' => $creditoId]);
             $credito = $stmtCred->fetch();
@@ -286,7 +296,6 @@ class Credito {
             $saldoPendienteActual = floatval($credito['monto_pendiente_credito_usd']);
             $totalGeneral = floatval($credito['total_general_usd']);
 
-            // 3. Calcular reversión de saldos
             $nuevoSaldoPendiente = $saldoPendienteActual + $montoAbonoUsd;
             $excesoARevertir = 0.00;
 
@@ -297,19 +306,16 @@ class Credito {
 
             $montoDeudaARestaurar = $montoAbonoUsd - $excesoARevertir;
 
-            // 4. Revertir saldo a favor del cliente si hubo excedente acreditado previamente
             if ($excesoARevertir > 0) {
                 $stmtCli = $db->prepare("UPDATE clientes SET saldo_favor_usd = GREATEST(0, saldo_favor_usd - :exceso) WHERE id = :cliente_id");
                 $stmtCli->execute(['exceso' => $excesoARevertir, 'cliente_id' => $clienteId]);
             }
 
-            // 5. Restaurar la deuda actual del cliente
             if ($montoDeudaARestaurar > 0) {
                 $stmtCliDeuda = $db->prepare("UPDATE clientes SET deuda_actual_usd = deuda_actual_usd + :restaurar WHERE id = :cliente_id");
                 $stmtCliDeuda->execute(['restaurar' => $montoDeudaARestaurar, 'cliente_id' => $clienteId]);
             }
 
-            // 6. Actualizar la venta a crédito con su saldo pendiente anterior
             $stmtUpdCred = $db->prepare("
                 UPDATE ventas 
                 SET monto_pendiente_credito_usd = :saldo_pendiente 
@@ -320,7 +326,6 @@ class Credito {
                 'id'              => $creditoId
             ]);
 
-            // 7. Eliminar registros del abono
             $stmtDelDet = $db->prepare("DELETE FROM creditos_abono_detalles WHERE creditos_abono_id = :abono_id");
             $stmtDelDet->execute(['abono_id' => $abonoId]);
 
