@@ -15,7 +15,7 @@ $host = $_SERVER['HTTP_HOST'];
 
 // Detecta el directorio raíz web de forma automática (ej. /anacosmeticsy/public en local o vacío/raíz en servidor)
 $scriptDir = str_replace('\\', '/', dirname($_SERVER['SCRIPT_NAME']));
-$baseUrl = rtrim($protocol . $host . $scriptDir, '/');
+$baseUrl = rtrim($protocol . $host . str_replace('/public', '', $scriptDir), '/');
 
 // Definir BASE_URL para los recursos estáticos (CSS, JS, Imágenes y Enlaces)
 define('BASE_URL', $baseUrl);
