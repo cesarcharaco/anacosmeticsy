@@ -2,15 +2,7 @@
 // public/index.php
 define('BASE_URL', 'https://anacosmeticsy.yermotorsca.com');
 
-// Diagnóstico temporal.
-header('Content-Type: text/plain; charset=utf-8');
-header('Cache-Control: no-store, no-cache, must-revalidate');
 
-echo "PRUEBA BASE_URL - ANA 02\n";
-echo "BASE_URL: " . BASE_URL . "\n";
-echo "CSS generado: " . BASE_URL . "/assets/css/tabler.min.css\n";
-
-exit;
 // Iniciar sesión para control de usuarios
 session_start();
 
