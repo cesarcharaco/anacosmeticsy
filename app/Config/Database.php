@@ -3,9 +3,9 @@
 
 class Database {
     private static $host = 'localhost';
-    private static $db   = 'anacosmetics_db';
-    private static $user = 'root';
-    private static $pass = '';
+    private static $db   = 'yerm0726_anacosmeticsy';
+    private static $user = 'yerm0726_anacosmeticsy';
+    private static $pass = 'Anacosmeticsy26';
     private static $charset = 'utf8mb4';
     private static $pdo = null;
     //bd:yerm0726_anacosmeticsy
