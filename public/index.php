@@ -9,8 +9,9 @@ session_start();
 // Ruta física del proyecto: carpeta superior a public.
 define('BASE_PATH', dirname(__DIR__) . '/');
 
-// URL pública de producción, sin /public y sin barra final.
-define('BASE_URL', 'https://anacosmeticsy.yermotorsca.com');
+
+require_once BASE_PATH . 'app/Config/Env.php';
+Env::load(BASE_PATH . '.env');
 
 
 // Cargar configuración de base de datos
