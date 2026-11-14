@@ -19,7 +19,7 @@
         </div>
       </div>
       <div class="col-12 col-md-auto ms-md-auto d-flex gap-2">
-        <a href="/anacosmeticsy/public/ventas" class="btn btn-primary d-flex align-items-center gap-1">
+        <a href="<?= BASE_URL ?>/ventas" class="btn btn-primary d-flex align-items-center gap-1">
           <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-cash-register" width="20" height="20" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M5 21h14a2 2 0 0 0 2 -2v-8a2 2 0 0 0 -2 -2h-14a2 2 0 0 0 -2 2v8a2 2 0 0 0 2 2z" /><path d="M6 7h12a3 3 0 0 0 3 -3v-1a1 1 0 0 0 -1 1v1a3 3 0 0 0 3 3z" /><path d="M9 14h2v2h-2z" /><path d="M13 14h2v2h-2z" /><path d="M17 14h2v2h-2z" /><path d="M9 18h2v2h-2z" /><path d="M13 18h2v2h-2z" /><path d="M17 18h2v2h-2z" /></svg>
           Ir a Caja (POS)
         </a>
@@ -60,7 +60,7 @@
         <h3 class="card-title fw-bold mb-0">🔍 Filtros de Búsqueda</h3>
       </div>
       <div class="card-body p-3">
-        <form method="GET" action="/anacosmeticsy/public/ventas/historial" class="row g-2">
+        <form method="GET" action="<?= BASE_URL ?>/ventas/historial" class="row g-2">
           <div class="col-12 col-md-2">
             <label class="form-label small fw-bold mb-1">Fecha Desde:</label>
             <input type="date" name="fecha_inicio" class="form-control form-control-sm" value="<?= htmlspecialchars($filtroFechaInicio ?? '') ?>">
@@ -93,7 +93,7 @@
           </div>
           <div class="col-12 col-md-2 d-flex align-items-end gap-1">
             <button type="submit" class="btn btn-sm btn-primary w-100">Filtrar</button>
-            <a href="/anacosmeticsy/public/ventas/historial" class="btn btn-sm btn-outline-secondary" title="Limpiar Filtros">↺</a>
+            <a href="<?= BASE_URL ?>/ventas/historial" class="btn btn-sm btn-outline-secondary" title="Limpiar Filtros">↺</a>
           </div>
         </form>
       </div>
@@ -173,7 +173,7 @@
                       </button>
                       
                       <!-- Botón Ver / Imprimir Nota -->
-                      <a href="/anacosmeticsy/public/ventas/notaEntrega/<?= $v['id'] ?>" target="_blank" class="btn btn-icon btn-sm btn-outline-primary" title="Imprimir Nota">
+                      <a href="<?= BASE_URL ?>/ventas/notaEntrega/<?= $v['id'] ?>" target="_blank" class="btn btn-icon btn-sm btn-outline-primary" title="Imprimir Nota">
                         <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="16" height="16" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M17 17h2a2 2 0 0 0 2 -2v-4a2 2 0 0 0 -2 -2h-14a2 2 0 0 0 -2 2v4a2 2 0 0 0 2 2h2" /><path d="M17 9v-4a2 2 0 0 0 -2 -2h-6a2 2 0 0 0 -2 2v4" /><path d="M7 13m0 2a2 2 0 0 1 2 -2h6a2 2 0 0 1 2 2v4a2 2 0 0 1 -2 2h-6a2 2 0 0 1 -2 -2z" /></svg>
                       </a>
 
@@ -225,7 +225,7 @@
 <div class="modal modal-blur fade" id="modal-anular-venta" tabindex="-1" role="dialog" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered modal-sm" role="document">
     <div class="modal-content shadow-lg border-0 rounded-3">
-      <form action="/anacosmeticsy/public/ventas/anular" method="POST" onsubmit="return validarAnulacionVenta(event)">
+      <form action="<?= BASE_URL ?>/ventas/anular" method="POST" onsubmit="return validarAnulacionVenta(event)">
         <input type="hidden" name="venta_id" id="input-anular-venta-id">
         <div class="modal-body text-center py-4">
           <svg xmlns="http://www.w3.org/2000/svg" class="icon mb-2 text-danger icon-lg" width="36" height="36" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 9v2m0 4v.01" /><path d="M5.07 19h13.86a1.5 1.5 0 0 0 1.3 -2.25l-6.93 -12a1.5 1.5 0 0 0 -2.6 0l-6.93 12a1.5 1.5 0 0 0 1.3 2.25z" /></svg>
@@ -298,7 +298,7 @@
     const modal = new bootstrap.Modal(document.getElementById('modal-detalle-venta'));
     modal.show();
 
-    fetch(`/anacosmeticsy/public/ventas/obtenerDetalleAjax/${ventaId}`)
+    fetch(`<?= BASE_URL ?>/ventas/obtenerDetalleAjax/${ventaId}`)
       .then(res => res.json())
       .then(data => {
         if (!data.success) {

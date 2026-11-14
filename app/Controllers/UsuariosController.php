@@ -7,7 +7,7 @@ class UsuariosController {
 
     public function __construct() {
         if (!isset($_SESSION['user_id'])) {
-            header('Location: /anacosmeticsy/public/auth');
+            header('Location: ' . BASE_URL . '/auth');
             exit;
         }
     }
@@ -16,7 +16,7 @@ class UsuariosController {
     public function index() {
         if ($_SESSION['user_rol'] !== 'admin') {
             $_SESSION['error'] = "No tienes permisos para acceder a la gestión de usuarios.";
-            header('Location: /anacosmeticsy/public/dashboard');
+            header('Location: ' . BASE_URL . '/dashboard');
             exit;
         }
 
@@ -92,7 +92,7 @@ class UsuariosController {
     public function eliminar($id) {
         if ($_SESSION['user_rol'] !== 'admin') {
             $_SESSION['error'] = "No tienes permisos para realizar esta acción.";
-            header('Location: /anacosmeticsy/public/dashboard');
+            header('Location: ' . BASE_URL . '/dashboard');
             exit;
         }
 
@@ -103,7 +103,7 @@ class UsuariosController {
             $_SESSION['error'] = $e->getMessage();
         }
 
-        header('Location: /anacosmeticsy/public/usuarios');
+        header('Location: ' . BASE_URL . '/usuarios');
         exit;
     }
 

@@ -17,7 +17,7 @@
         </div>
       </div>
       <div class="col-12 col-md-auto ms-md-auto">
-        <a href="/anacosmeticsy/public/dashboard" class="btn btn-outline-secondary d-flex align-items-center gap-1">
+        <a href="<?= BASE_URL ?>/dashboard" class="btn btn-outline-secondary d-flex align-items-center gap-1">
           <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-arrow-left" width="20" height="20" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M5 12l14 0" /><path d="M5 12l6 6" /><path d="M5 12l6 -6" /></svg>
           Volver al Dashboard
         </a>
@@ -144,7 +144,7 @@
     const payload = {};
     payload[campo] = valor;
 
-    fetch('/anacosmeticsy/public/usuarios/actualizarPerfilCampo', {
+    fetch('<?= BASE_URL ?>/usuarios/actualizarPerfilCampo', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(payload)

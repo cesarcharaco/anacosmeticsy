@@ -19,7 +19,7 @@
         </div>
       </div>
       <div class="col-12 col-md-auto ms-md-auto d-flex gap-2">
-        <a href="/anacosmeticsy/public/inventario" class="btn btn-outline-secondary d-flex align-items-center gap-1">
+        <a href="<?= BASE_URL ?>/inventario" class="btn btn-outline-secondary d-flex align-items-center gap-1">
           <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-arrow-left" width="20" height="20" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M5 12l14 0" /><path d="M5 12l6 6" /><path d="M5 12l6 -6" /></svg>
           Volver a Inventario
         </a>
@@ -419,7 +419,7 @@
       items: itemsMerma
     };
 
-    fetch('/anacosmeticsy/public/mermas/registrar', {
+    fetch('<?= BASE_URL ?>/mermas/registrar', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(payload)
@@ -464,7 +464,7 @@
       return;
     }
 
-    fetch('/anacosmeticsy/public/mermas/anular', {
+    fetch('<?= BASE_URL ?>/mermas/anular', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ merma_id: mermaId, motivo_anulacion: motivo })
@@ -497,7 +497,7 @@
     document.getElementById('lbl-detalle-titulo').innerText = `Detalle Salida #${String(mermaId).padStart(5, '0')}`;
     document.getElementById('modal-detalle-body').innerHTML = `<div class="text-center py-4"><div class="spinner-border text-primary"></div></div>`;
 
-    fetch(`/anacosmeticsy/public/mermas/obtenerDetalleAjax/${mermaId}`)
+    fetch(`<?= BASE_URL ?>/mermas/obtenerDetalleAjax/${mermaId}`)
       .then(res => res.json())
       .then(data => {
         if (!data.success) {

@@ -9,7 +9,7 @@ class AuthController {
     public function index() {
         // Si ya hay sesión iniciada, redirigir al dashboard
         if (isset($_SESSION['user_id'])) {
-            header('Location: /anacosmeticsy/public/dashboard');
+            header('Location: ' . BASE_URL . '/dashboard');
             exit;
         }
         require_once BASE_PATH . 'views/auth/login.php';
@@ -37,7 +37,7 @@ class AuthController {
                 $_SESSION['user_rol'] = $usuario['rol'];
 
                 // Redireccionar al dashboard general
-                header('Location: /anacosmeticsy/public/dashboard');
+                header('Location: ' . BASE_URL . '/dashboard');
                 exit;
             } else {
                 $error = "Credenciales incorrectas. Verifica tu correo y contraseña.";
@@ -49,7 +49,7 @@ class AuthController {
     // Cierra la sesión
     public function logout() {
         session_destroy();
-        header('Location: /anacosmeticsy/public/auth');
+        header('Location: ' . BASE_URL . '/auth');
         exit;
     }
 }

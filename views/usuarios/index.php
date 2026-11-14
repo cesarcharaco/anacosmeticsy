@@ -19,7 +19,7 @@
         </div>
       </div>
       <div class="col-12 col-md-auto ms-md-auto d-flex gap-2">
-        <a href="/anacosmeticsy/public/dashboard" class="btn btn-outline-secondary d-flex align-items-center gap-1">
+        <a href="<?= BASE_URL ?>/dashboard" class="btn btn-outline-secondary d-flex align-items-center gap-1">
           <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-arrow-left" width="20" height="20" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M5 12l14 0" /><path d="M5 12l6 6" /><path d="M5 12l6 -6" /></svg>
           Volver
         </a>
@@ -206,7 +206,7 @@
       rol: document.getElementById('nuevo-rol').value
     };
 
-    fetch('/anacosmeticsy/public/usuarios/guardar', {
+    fetch('<?= BASE_URL ?>/usuarios/guardar', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(payload)
@@ -253,7 +253,7 @@
       password: document.getElementById('edit-password').value.trim()
     };
 
-    fetch('/anacosmeticsy/public/usuarios/editar', {
+    fetch('<?= BASE_URL ?>/usuarios/editar', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(payload)
@@ -291,7 +291,7 @@
       cancelButtonText: 'Cancelar'
     }).then((result) => {
       if (result.isConfirmed) {
-        window.location.href = `/anacosmeticsy/public/usuarios/eliminar/${id}`;
+        window.location.href = `<?= BASE_URL ?>/usuarios/eliminar/${id}`;
       }
     });
   }

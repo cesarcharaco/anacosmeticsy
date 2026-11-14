@@ -10,7 +10,7 @@ class ClientesController {
 
     public function __construct() {
         if (!isset($_SESSION['user_id'])) {
-            header('Location: /anacosmeticsy/public/auth');
+            header('Location: ' . BASE_URL . '/auth');
             exit;
         }
         $this->bcvService = new BcvRateService();
@@ -53,7 +53,7 @@ class ClientesController {
                 $_SESSION['error'] = $e->getMessage();
             }
 
-            header('Location: /anacosmeticsy/public/clientes');
+            header('Location: ' . BASE_URL . '/clientes');
             exit;
         }
     }
@@ -80,7 +80,7 @@ class ClientesController {
                 $_SESSION['error'] = $e->getMessage();
             }
 
-            header('Location: /anacosmeticsy/public/clientes');
+            header('Location: ' . BASE_URL . '/clientes');
             exit;
         }
     }
@@ -95,7 +95,7 @@ class ClientesController {
             $_SESSION['error'] = $e->getMessage();
         }
 
-        header('Location: /anacosmeticsy/public/clientes');
+        header('Location: ' . BASE_URL . '/clientes');
         exit;
     }
 

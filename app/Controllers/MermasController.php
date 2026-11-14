@@ -8,7 +8,7 @@ class MermasController {
 
     public function __construct() {
         if (!isset($_SESSION['user_id'])) {
-            header('Location: /anacosmeticsy/public/auth');
+            header('Location: ' . BASE_URL . '/auth');
             exit;
         }
     }

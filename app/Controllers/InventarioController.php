@@ -11,7 +11,7 @@ class InventarioController {
 
     public function __construct() {
         if (!isset($_SESSION['user_id'])) {
-            header('Location: /anacosmeticsy/public/auth');
+            header('Location: ' . BASE_URL . '/auth');
             exit;
         }
         $this->bcvService = new BcvRateService();
@@ -57,12 +57,12 @@ class InventarioController {
 
             // Si el registro vino desde la pantalla de Actualizar Inventario (Recepción)
             if (isset($_POST['origen']) && $_POST['origen'] === 'actualizar') {
-                header('Location: /anacosmeticsy/public/inventario/actualizar');
+                header('Location: ' . BASE_URL . '/inventario/actualizar');
                 exit;
             }
 
             // Flujo normal desde la vista principal de Inventario
-            header('Location: /anacosmeticsy/public/inventario');
+            header('Location: ' . BASE_URL . '/inventario');
             exit;
         }
     }
@@ -81,7 +81,7 @@ class InventarioController {
             $_SESSION['error'] = $e->getMessage();
         }
 
-        header('Location: /anacosmeticsy/public/inventario');
+        header('Location: ' . BASE_URL . '/inventario');
         exit;
     }
 
@@ -114,7 +114,7 @@ class InventarioController {
                 $_SESSION['error'] = "Error al procesar la recepción: " . $e->getMessage();
             }
 
-            header('Location: /anacosmeticsy/public/inventario');
+            header('Location: ' . BASE_URL . '/inventario');
             exit;
         }
     }

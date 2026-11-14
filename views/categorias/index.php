@@ -17,7 +17,7 @@
       </div>
       
       <div class="col-12 col-md-auto ms-md-auto d-flex gap-2">
-        <a href="/anacosmeticsy/public/inventario" class="btn btn-outline-secondary flex-fill flex-md-grow-0">
+        <a href="<?= BASE_URL ?>/inventario" class="btn btn-outline-secondary flex-fill flex-md-grow-0">
           &larr; Ir a Inventario
         </a>
         <button class="btn btn-primary flex-fill flex-md-grow-0 d-flex align-items-center justify-content-center gap-1 shadow-sm" data-bs-toggle="modal" data-bs-target="#modal-categoria" onclick="abrirModalNueva()">
@@ -54,7 +54,7 @@
                   <p class="text-muted small mb-3"><?= htmlspecialchars($cat['descripcion'] ?? 'Sin descripción') ?></p>
                   <div class="d-flex justify-content-end gap-2 pt-2 border-top">
                     <button class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#modal-categoria" onclick='abrirModalEditar(<?= json_encode($cat) ?>)'>Editar</button>
-                    <a href="/anacosmeticsy/public/categorias/eliminar/<?= $cat['id'] ?>" class="btn btn-sm btn-outline-danger" onclick="return confirm('¿Eliminar esta categoría?')">Eliminar</a>
+                    <a href="<?= BASE_URL ?>/categorias/eliminar/<?= $cat['id'] ?>" class="btn btn-sm btn-outline-danger" onclick="return confirm('¿Eliminar esta categoría?')">Eliminar</a>
                   </div>
                 </div>
               </div>
@@ -87,7 +87,7 @@
                     <button class="btn btn-sm btn-icon btn-ghost-primary me-1" title="Editar" data-bs-toggle="modal" data-bs-target="#modal-categoria" onclick='abrirModalEditar(<?= json_encode($cat) ?>)'>
                       <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-pencil" width="18" height="18" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M4 20h4l10.5 -10.5a2.828 2.828 0 1 0 -4 -4l-10.5 10.5v4" /><path d="M13.5 6.5l4 4" /></svg>
                     </button>
-                    <a href="/anacosmeticsy/public/categorias/eliminar/<?= $cat['id'] ?>" class="btn btn-sm btn-icon btn-ghost-danger" title="Eliminar" onclick="return confirm('¿Deseas eliminar esta categoría?')">
+                    <a href="<?= BASE_URL ?>/categorias/eliminar/<?= $cat['id'] ?>" class="btn btn-sm btn-icon btn-ghost-danger" title="Eliminar" onclick="return confirm('¿Deseas eliminar esta categoría?')">
                       <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-trash" width="18" height="18" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M4 7l16 0" /><path d="M10 11l0 6" /><path d="M14 11l0 6" /><path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12" /><path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3" /></svg>
                     </a>
                   </td>
@@ -115,7 +115,7 @@
 <div class="modal modal-blur fade" id="modal-categoria" tabindex="-1" role="dialog" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered" role="document">
     <div class="modal-content shadow-lg border-0 rounded-3">
-      <form action="/anacosmeticsy/public/categorias/guardar" method="POST" autocomplete="off">
+      <form action="<?= BASE_URL ?>/categorias/guardar" method="POST" autocomplete="off">
         
         <div class="modal-header bg-light">
           <h5 class="modal-title fw-bold text-dark" id="modal-titulo">Nueva Categoría</h5>

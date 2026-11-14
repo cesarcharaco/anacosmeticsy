@@ -7,7 +7,7 @@ class CategoriaController {
 
     public function __construct() {
         if (!isset($_SESSION['user_id'])) {
-            header('Location: /anacosmeticsy/public/auth');
+            header('Location: ' . BASE_URL . '/auth');
             exit;
         }
     }
@@ -32,7 +32,7 @@ class CategoriaController {
                 }
             }
 
-            header('Location: /anacosmeticsy/public/categoria');
+            header('Location: ' . BASE_URL . '/categoria');
             exit;
         }
     }
@@ -46,7 +46,7 @@ class CategoriaController {
                 $_SESSION['mensaje'] = "No se puede eliminar la categoría porque hay productos asociados.";
             }
         }
-        header('Location: /anacosmeticsy/public/categoria');
+        header('Location: ' . BASE_URL . '/categoria');
         exit;
     }
 }

@@ -17,7 +17,7 @@
       </div>
 
       <div class="col-12 col-md-auto ms-md-auto d-flex gap-2">
-        <a href="/anacosmeticsy/public/inventario" class="btn btn-outline-secondary d-flex align-items-center gap-1">
+        <a href="<?= BASE_URL ?>/inventario" class="btn btn-outline-secondary d-flex align-items-center gap-1">
           <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-arrow-left" width="20" height="20" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M5 12l14 0" /><path d="M5 12l6 6" /><path d="M5 12l6 -6" /></svg>
           Volver al Inventario
         </a>
@@ -79,7 +79,7 @@
             <ul class="pagination m-0 ms-auto">
               <!-- Botón Anterior -->
               <li class="page-item <?= ($paginaActual <= 1) ? 'disabled' : '' ?>">
-                <a class="page-link" href="/anacosmeticsy/public/inventario/historial?pagina=<?= $paginaActual - 1 ?>" tabindex="-1" aria-disabled="true">
+                <a class="page-link" href="<?= BASE_URL ?>/inventario/historial?pagina=<?= $paginaActual - 1 ?>" tabindex="-1" aria-disabled="true">
                   <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M15 6l-6 6l6 6" /></svg>
                   Anterior
                 </a>
@@ -88,13 +88,13 @@
               <!-- Páginas numéricas -->
               <?php for ($i = 1; $i <= $totalPaginas; $i++): ?>
                 <li class="page-item <?= ($paginaActual == $i) ? 'active' : '' ?>">
-                  <a class="page-link" href="/anacosmeticsy/public/inventario/historial?pagina=<?= $i ?>"><?= $i ?></a>
+                  <a class="page-link" href="<?= BASE_URL ?>/inventario/historial?pagina=<?= $i ?>"><?= $i ?></a>
                 </li>
               <?php endfor; ?>
 
               <!-- Botón Siguiente -->
               <li class="page-item <?= ($paginaActual >= $totalPaginas) ? 'disabled' : '' ?>">
-                <a class="page-link" href="/anacosmeticsy/public/inventario/historial?pagina=<?= $paginaActual + 1 ?>">
+                <a class="page-link" href="<?= BASE_URL ?>/inventario/historial?pagina=<?= $paginaActual + 1 ?>">
                   Siguiente
                   <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 6l6 6l-6 6" /></svg>
                 </a>
@@ -109,7 +109,7 @@
         <div class="card-body">
           <h3 class="fw-bold text-secondary mb-1">No hay historial de recepciones</h3>
           <p class="small text-muted mb-3">Aún no se ha procesado ninguna carga de mercancía en el sistema.</p>
-          <a href="/anacosmeticsy/public/inventario/actualizar" class="btn btn-success">Actualizar Inventario Ahora</a>
+          <a href="<?= BASE_URL ?>/inventario/actualizar" class="btn btn-success">Actualizar Inventario Ahora</a>
         </div>
       </div>
     <?php endif; ?>
@@ -168,7 +168,7 @@
     const modal = new bootstrap.Modal(modalEl);
     modal.show();
 
-    fetch(`/anacosmeticsy/public/inventario/verDetalleRecepcion/${recepcionId}`)
+    fetch(`<?= BASE_URL ?>/inventario/verDetalleRecepcion/${recepcionId}`)
       .then(response => response.json())
       .then(data => {
         if (data.length === 0) {

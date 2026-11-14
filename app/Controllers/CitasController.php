@@ -11,7 +11,7 @@ class CitasController {
 
     public function __construct() {
         if (!isset($_SESSION['user_id'])) {
-            header('Location: /anacosmeticsy/public/auth');
+            header('Location: ' . BASE_URL . '/auth');
             exit;
         }
         $this->bcvService = new BcvRateService();
@@ -60,7 +60,7 @@ class CitasController {
             } catch (Exception $e) {
                 $_SESSION['error'] = $e->getMessage();
             }
-            header('Location: /anacosmeticsy/public/citas');
+            header('Location: ' . BASE_URL . '/citas');
             exit;
         }
     }
@@ -72,7 +72,7 @@ class CitasController {
         } catch (Exception $e) {
             $_SESSION['error'] = $e->getMessage();
         }
-        header('Location: /anacosmeticsy/public/citas');
+        header('Location: ' . BASE_URL . '/citas');
         exit;
     }
 
@@ -90,7 +90,7 @@ class CitasController {
             } catch (Exception $e) {
                 $_SESSION['error'] = $e->getMessage();
             }
-            header('Location: /anacosmeticsy/public/citas');
+            header('Location: ' . BASE_URL . '/citas');
             exit;
         }
     }
@@ -113,7 +113,7 @@ class CitasController {
             } catch (Exception $e) {
                 $_SESSION['error'] = $e->getMessage();
             }
-            header('Location: /anacosmeticsy/public/citas');
+            header('Location: ' . BASE_URL . '/citas');
             exit;
         }
     }
@@ -139,7 +139,7 @@ class CitasController {
             } catch (Exception $e) {
                 $_SESSION['error'] = $e->getMessage();
             }
-            header('Location: /anacosmeticsy/public/citas');
+            header('Location: ' . BASE_URL . '/citas');
             exit;
         }
     }
@@ -154,7 +154,7 @@ class CitasController {
         } catch (Exception $e) {
             $_SESSION['error'] = $e->getMessage();
         }
-        header('Location: /anacosmeticsy/public/citas');
+        header('Location: ' . BASE_URL . '/citas');
         exit;
     }
 }

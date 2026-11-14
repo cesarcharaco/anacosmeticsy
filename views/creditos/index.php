@@ -18,7 +18,7 @@
       </div>
 
       <div class="col-12 col-md-auto ms-md-auto d-flex gap-2">
-        <a href="/anacosmeticsy/public/dashboard" class="btn btn-outline-secondary d-flex align-items-center gap-1">
+        <a href="<?= BASE_URL ?>/dashboard" class="btn btn-outline-secondary d-flex align-items-center gap-1">
           <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-arrow-left" width="20" height="20" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M5 12l14 0" /><path d="M5 12l6 6" /><path d="M5 12l6 -6" /></svg>
           Volver al Dashboard
         </a>
@@ -111,15 +111,15 @@
               <span class="text-muted text-xs">Pág. <?= $paginaActual ?> de <?= $totalPaginas ?></span>
               <ul class="pagination pagination-sm m-0">
                 <li class="page-item <?= ($paginaActual <= 1) ? 'disabled' : '' ?>">
-                  <a class="page-link" href="/anacosmeticsy/public/creditos?p=<?= $paginaActual - 1 ?>">&lsaquo;</a>
+                  <a class="page-link" href="<?= BASE_URL ?>/creditos?p=<?= $paginaActual - 1 ?>">&lsaquo;</a>
                 </li>
                 <?php for ($i = 1; $i <= $totalPaginas; $i++): ?>
                   <li class="page-item <?= ($paginaActual == $i) ? 'active' : '' ?>">
-                    <a class="page-link" href="/anacosmeticsy/public/creditos?p=<?= $i ?>"><?= $i ?></a>
+                    <a class="page-link" href="<?= BASE_URL ?>/creditos?p=<?= $i ?>"><?= $i ?></a>
                   </li>
                 <?php endfor; ?>
                 <li class="page-item <?= ($paginaActual >= $totalPaginas) ? 'disabled' : '' ?>">
-                  <a class="page-link" href="/anacosmeticsy/public/creditos?p=<?= $paginaActual + 1 ?>">&rsaquo;</a>
+                  <a class="page-link" href="<?= BASE_URL ?>/creditos?p=<?= $paginaActual + 1 ?>">&rsaquo;</a>
                 </li>
               </ul>
             </div>
@@ -157,7 +157,7 @@
                 </span>
               </div>
               <div class="col-12 col-md-3 text-md-end border-start">
-                <a id="btn-generar-reporte" href="<?= $clienteSeleccionadoId ? '/anacosmeticsy/public/creditos/reporteDeuda/' . $clienteSeleccionadoId : '#' ?>" target="_blank" class="btn btn-outline-primary w-100 d-flex align-items-center justify-content-center gap-1 shadow-xs">
+                <a id="btn-generar-reporte" href="<?= $clienteSeleccionadoId ? '<?= BASE_URL ?>/creditos/reporteDeuda/' . $clienteSeleccionadoId : '#' ?>" target="_blank" class="btn btn-outline-primary w-100 d-flex align-items-center justify-content-center gap-1 shadow-xs">
                   <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="18" height="18" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M17 17h2a2 2 0 0 0 2 -2v-4a2 2 0 0 0 -2 -2h-14a2 2 0 0 0 -2 2v4a2 2 0 0 0 2 2h2" /><path d="M17 9v-4a2 2 0 0 0 -2 -2h-6a2 2 0 0 0 -2 2v4" /><path d="M7 13m0 2a2 2 0 0 1 2 -2h6a2 2 0 0 1 2 2v4a2 2 0 0 1 -2 2h-6a2 2 0 0 1 -2 -2z" /></svg>
                   Imprimir Reporte
                 </a>
@@ -267,7 +267,7 @@
 <div class="modal modal-blur fade" id="modal-abono" tabindex="-1" role="dialog" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
     <div class="modal-content shadow-lg border-0 rounded-3">
-      <form action="/anacosmeticsy/public/creditos/abonar" method="POST" id="form-registrar-abono" onsubmit="return validarFormularioAbono(event)">
+      <form action="<?= BASE_URL ?>/creditos/abonar" method="POST" id="form-registrar-abono" onsubmit="return validarFormularioAbono(event)">
         <input type="hidden" name="credito_id" id="abono-credito-id">
         <input type="hidden" name="cliente_id_redirect" id="abono-cliente-id-redirect">
         
@@ -346,7 +346,7 @@
 <div class="modal modal-blur fade" id="modal-anular-abono" tabindex="-1" role="dialog" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered modal-sm" role="document">
     <div class="modal-content shadow-lg border-0 rounded-3">
-      <form action="/anacosmeticsy/public/creditos/anularAbono" method="POST">
+      <form action="<?= BASE_URL ?>/creditos/anularAbono" method="POST">
         <input type="hidden" name="abono_id" id="anular-abono-id">
         <input type="hidden" name="cliente_id_redirect" id="anular-cliente-id-redirect">
         <div class="modal-body text-center py-4">
@@ -392,7 +392,7 @@
     const paginacionFooter = document.getElementById('paginacion-clientes-footer');
     if (paginacionFooter) paginacionFooter.style.display = query.length > 0 ? 'none' : '';
 
-    fetch(`/anacosmeticsy/public/creditos/buscarClientes?q=${encodeURIComponent(query)}`)
+    fetch(`<?= BASE_URL ?>/creditos/buscarClientes?q=${encodeURIComponent(query)}`)
       .then(res => res.json())
       .then(data => {
         if (!data.success) return;
@@ -433,10 +433,10 @@
     // Actualizar enlace del botón de reporte dinámicamente
     const btnReporte = document.getElementById('btn-generar-reporte');
     if (btnReporte) {
-      btnReporte.href = `/anacosmeticsy/public/creditos/reporteDeuda/${clienteId}`;
+      btnReporte.href = `<?= BASE_URL ?>/creditos/reporteDeuda/${clienteId}`;
     }
 
-    fetch(`/anacosmeticsy/public/creditos/obtenerHistorialCliente/${clienteId}`)
+    fetch(`<?= BASE_URL ?>/creditos/obtenerHistorialCliente/${clienteId}`)
       .then(res => res.json())
       .then(data => {
         if (!data.success) return;

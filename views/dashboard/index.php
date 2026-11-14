@@ -58,7 +58,7 @@
         <div class="d-flex align-items-center gap-3">
           <!-- Logotipo de la Empresa (Responsive) -->
           <span class="avatar avatar-lg rounded bg-white border p-1 shadow-sm flex-shrink-0" style="width: 48px; height: 48px;">
-            <img src="/anacosmeticsy/public/assets/img/logo_ana.jpeg" alt="Logo Ana Boutique Cosmetics" class="w-100 h-100 object-fit-contain rounded">
+            <img src="<?= BASE_URL ?>/assets/img/logo_ana.jpeg" alt="Logo Ana Boutique Cosmetics" class="w-100 h-100 object-fit-contain rounded">
           </span>
           <div>
             <h2 class="page-title mb-0 fs-3 text-dark fw-bold">ANA BOUTIQUE COSMETICS, C.A.</h2>
@@ -104,14 +104,14 @@
             </div>
 
             <!-- Opción 1: Mi Perfil -->
-            <a href="/anacosmeticsy/public/usuarios/perfil" class="dropdown-item d-flex align-items-center gap-2 py-2">
+            <a href="<?= BASE_URL ?>/usuarios/perfil" class="dropdown-item d-flex align-items-center gap-2 py-2">
               <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-user text-primary" width="18" height="18" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M8 7a4 4 0 1 0 8 0a4 4 0 0 0 -8 0" /><path d="M6 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2" /></svg>
               Mi Perfil & Seguridad
             </a>
 
             <!-- Opción 2: Gestión de Usuarios (Exclusivo Admin) -->
             <?php if (isset($_SESSION['user_rol']) && $_SESSION['user_rol'] === 'admin'): ?>
-              <a href="/anacosmeticsy/public/usuarios" class="dropdown-item d-flex align-items-center gap-2 py-2">
+              <a href="<?= BASE_URL ?>/usuarios" class="dropdown-item d-flex align-items-center gap-2 py-2">
                 <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-users-group text-purple" width="18" height="18" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M10 13a5 5 0 1 0 -5 -5" /><path d="M8 21v-1a2 2 0 0 1 2 -2h4a2 2 0 0 1 2 2v1" /><path d="M15 5a5 5 0 1 0 5 5" opacity=".5" /><path d="M17 21v-1a2 2 0 0 0 -2 -2h-1" opacity=".5" /></svg>
                 Gestión de Usuarios
               </a>
@@ -120,7 +120,7 @@
             <div class="dropdown-divider"></div>
 
             <!-- Opción 3: Salir / Cerrar Sesión -->
-            <a href="/anacosmeticsy/public/auth/logout" class="dropdown-item d-flex align-items-center gap-2 py-2 text-danger">
+            <a href="<?= BASE_URL ?>/auth/logout" class="dropdown-item d-flex align-items-center gap-2 py-2 text-danger">
               <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-logout" width="18" height="18" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M14 8v-2a2 2 0 0 0 -2 -2h-7a2 2 0 0 0 -2 2v12a2 2 0 0 0 2 2h7a2 2 0 0 0 2 -2v-2" /><path d="M9 12h12m-3 -3l3 3l-3 3" /></svg>
               Cerrar Sesión
             </a>
@@ -158,7 +158,7 @@
       
       <!-- 1. Módulo de Inventario -->
       <div class="col-sm-6 col-lg-4">
-        <a href="/anacosmeticsy/public/inventario" class="card card-link card-link-pop text-decoration-none h-100 shadow-sm border-0">
+        <a href="<?= BASE_URL ?>/inventario" class="card card-link card-link-pop text-decoration-none h-100 shadow-sm border-0">
           <div class="card-body p-4 text-center">
             <span class="avatar avatar-xl rounded-circle bg-purple-lt mb-3 mx-auto">
               <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-package" width="36" height="36" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 3l8 4.5v9l-8 4.5l-8 -4.5v-9l8 -4.5" /><path d="M12 12l8 -4.5" /><path d="M12 12v9" /><path d="M12 12l-8 -4.5" /><path d="M16 5.25l-8 4.5" /></svg>
@@ -171,7 +171,7 @@
 
       <!-- 2. Módulo de Citas y Servicios -->
       <div class="col-sm-6 col-lg-4">
-        <a href="/anacosmeticsy/public/citas" class="card card-link card-link-pop text-decoration-none h-100 shadow-sm border-0">
+        <a href="<?= BASE_URL ?>/citas" class="card card-link card-link-pop text-decoration-none h-100 shadow-sm border-0">
           <div class="card-body p-4 text-center">
             <span class="avatar avatar-xl rounded-circle bg-pink-lt mb-3 mx-auto">
               <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-event" width="36" height="36" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M4 5m0 2a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v12a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2z" /><path d="M16 3v4" /><path d="M8 3v4" /><path d="M4 11h16" /><path d="M8 15h2v2h-2z" /></svg>
@@ -184,7 +184,7 @@
 
       <!-- 3. Módulo de Salidas y Despachos -->
       <div class="col-sm-6 col-lg-4">
-        <a href="/anacosmeticsy/public/ventas" class="card card-link card-link-pop text-decoration-none h-100 shadow-sm border-0">
+        <a href="<?= BASE_URL ?>/ventas" class="card card-link card-link-pop text-decoration-none h-100 shadow-sm border-0">
           <div class="card-body p-4 text-center">
             <span class="avatar avatar-xl rounded-circle bg-green-lt mb-3 mx-auto">
               <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-shopping-cart" width="36" height="36" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M6 19m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0" /><path d="M17 19m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0" /><path d="M17 17h-11v-14h-2" /><path d="M6 5l14 1l-1 7h-13" /></svg>
@@ -197,7 +197,7 @@
 
       <!-- 4. Módulo de Cuentas por Cobrar / Créditos -->
       <div class="col-sm-6 col-lg-4">
-        <a href="/anacosmeticsy/public/creditos" class="card card-link card-link-pop text-decoration-none h-100 shadow-sm border-0">
+        <a href="<?= BASE_URL ?>/creditos" class="card card-link card-link-pop text-decoration-none h-100 shadow-sm border-0">
           <div class="card-body p-4 text-center">
             <span class="avatar avatar-xl rounded-circle bg-yellow-lt mb-3 mx-auto">
               <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-receipt-2" width="36" height="36" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M5 21v-16a2 2 0 0 1 2 -2h10a2 2 0 0 1 2 2v16l-3 -2l-2 2l-2 -2l-2 2l-2 -2l-3 2" /><path d="M9 7h6" /><path d="M9 11h6" /><path d="M9 15h4" /></svg>
@@ -210,7 +210,7 @@
 
       <!-- 5. Módulo de Clientes -->
       <div class="col-sm-6 col-lg-4">
-        <a href="/anacosmeticsy/public/clientes" class="card card-link card-link-pop text-decoration-none h-100 shadow-sm border-0">
+        <a href="<?= BASE_URL ?>/clientes" class="card card-link card-link-pop text-decoration-none h-100 shadow-sm border-0">
           <div class="card-body p-4 text-center">
             <span class="avatar avatar-xl rounded-circle bg-blue-lt mb-3 mx-auto">
               <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-users" width="36" height="36" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 7m-4 0a4 4 0 1 0 8 0a4 4 0 1 0 -8 0" /><path d="M3 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2" /><path d="M16 3.13a4 4 0 0 1 0 7.75" /><path d="M21 21v-2a4 4 0 0 0 -3 -3.85" /></svg>
@@ -224,7 +224,7 @@
       <!-- 6. Configuración / Tasa BCV (Solo Admin) -->
       <?php if (isset($_SESSION['user_rol']) && $_SESSION['user_rol'] === 'admin'): ?>
       <div class="col-sm-6 col-lg-4">
-        <a href="/anacosmeticsy/public/configuracion" class="card card-link card-link-pop text-decoration-none h-100 shadow-sm border-0">
+        <a href="<?= BASE_URL ?>/configuracion" class="card card-link card-link-pop text-decoration-none h-100 shadow-sm border-0">
           <div class="card-body p-4 text-center">
             <span class="avatar avatar-xl rounded-circle bg-red-lt mb-3 mx-auto">
               <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-settings" width="36" height="36" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M10.325 4.317c.426 -1.756 2.924 -1.756 3.35 0a1.724 1.724 0 0 0 2.573 1.066c1.543 -.94 3.31 .826 2.37 2.37a1.724 1.724 0 0 0 1.065 2.572c1.756 .426 1.756 2.924 0 3.35a1.724 1.724 0 0 0 -1.066 2.573c.94 1.543 -.826 3.31 -2.37 2.37a1.724 1.724 0 0 0 -2.572 1.065c-.426 1.756 -2.924 1.756 -3.35 0a1.724 1.724 0 0 0 -2.573 -1.066c-1.543 .94 -3.31 -.826 -2.37 -2.37a1.724 1.724 0 0 0 -1.065 -2.572c-1.756 -.426 -1.756 -2.924 0 -3.35a1.724 1.724 0 0 0 1.066 -2.573c-.94 -1.543 .826 -3.31 2.37 -2.37c1 .608 2.296 .07 2.572 -1.065z" /><path d="M12 12m-3 0 a3 3 0 1 0 6 0 a3 3 0 1 0 -6 0" /></svg>

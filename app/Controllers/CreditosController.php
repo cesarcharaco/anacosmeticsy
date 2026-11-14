@@ -11,7 +11,7 @@ class CreditosController {
 
     public function __construct() {
         if (!isset($_SESSION['user_id'])) {
-            header('Location: /anacosmeticsy/public/auth');
+            header('Location: ' . BASE_URL . '/auth');
             exit;
         }
         $this->bcvService = new BcvRateService();
@@ -108,12 +108,12 @@ class CreditosController {
                 Credito::registrarAbono($data);
                 $_SESSION['mensaje'] = "¡Abono registrado exitosamente!";
                 
-                header('Location: /anacosmeticsy/public/creditos' . ($clienteIdRedirect ? "?cliente_id=$clienteIdRedirect" : ''));
+                header('Location: ' . BASE_URL . '/creditos' . ($clienteIdRedirect ? "?cliente_id=$clienteIdRedirect" : ''));
                 exit;
 
             } catch (Exception $e) {
                 $_SESSION['error'] = $e->getMessage();
-                header('Location: /anacosmeticsy/public/creditos' . ($clienteIdRedirect ? "?cliente_id=$clienteIdRedirect" : ''));
+                header('Location: ' . BASE_URL . '/creditos' . ($clienteIdRedirect ? "?cliente_id=$clienteIdRedirect" : ''));
                 exit;
             }
         }
@@ -154,12 +154,12 @@ class CreditosController {
                 Credito::anularAbono($abonoId);
                 $_SESSION['mensaje'] = "¡Abono anulado exitosamente y saldos revertidos!";
 
-                header('Location: /anacosmeticsy/public/creditos' . ($clienteIdRedirect ? "?cliente_id=$clienteIdRedirect" : ''));
+                header('Location: ' . BASE_URL . '/creditos' . ($clienteIdRedirect ? "?cliente_id=$clienteIdRedirect" : ''));
                 exit;
 
             } catch (Exception $e) {
                 $_SESSION['error'] = $e->getMessage();
-                header('Location: /anacosmeticsy/public/creditos' . ($clienteIdRedirect ? "?cliente_id=$clienteIdRedirect" : ''));
+                header('Location: ' . BASE_URL . '/creditos' . ($clienteIdRedirect ? "?cliente_id=$clienteIdRedirect" : ''));
                 exit;
             }
         }

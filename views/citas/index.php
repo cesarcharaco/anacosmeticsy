@@ -56,7 +56,7 @@
         </div>
       </div>
       <div class="col-12 col-md-auto ms-md-auto d-flex gap-2">
-        <a href="/anacosmeticsy/public/dashboard" class="btn btn-outline-secondary d-flex align-items-center gap-1">
+        <a href="<?= BASE_URL ?>/dashboard" class="btn btn-outline-secondary d-flex align-items-center gap-1">
           <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-arrow-left" width="20" height="20" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M5 12l14 0" /><path d="M5 12l6 6" /><path d="M5 12l6 -6" /></svg>
           Volver al Dashboard
         </a>
@@ -228,7 +228,7 @@
 <div class="modal modal-blur fade" id="modal-reagendar-cita" tabindex="-1" role="dialog" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered" role="document">
     <div class="modal-content shadow-lg border-0 rounded-3">
-      <form action="/anacosmeticsy/public/citas/reagendarCita" method="POST">
+      <form action="<?= BASE_URL ?>/citas/reagendarCita" method="POST">
         <input type="hidden" name="cita_id" id="reagendar-cita-id">
         <div class="modal-header bg-light">
           <h5 class="modal-title fw-bold text-dark">📅 Reagendar Cita</h5>
@@ -254,7 +254,7 @@
 <div class="modal modal-blur fade" id="modal-servicio" tabindex="-1" role="dialog" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered" role="document">
     <div class="modal-content shadow-lg border-0 rounded-3">
-      <form action="/anacosmeticsy/public/citas/guardarServicio" method="POST">
+      <form action="<?= BASE_URL ?>/citas/guardarServicio" method="POST">
         <div class="modal-header bg-light">
           <h5 class="modal-title fw-bold text-dark">Nuevo Servicio de Salón</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -288,7 +288,7 @@
 <div class="modal modal-blur fade" id="modal-editar-servicio" tabindex="-1" role="dialog" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered" role="document">
     <div class="modal-content shadow-lg border-0 rounded-3">
-      <form action="/anacosmeticsy/public/citas/actualizarServicio" method="POST">
+      <form action="<?= BASE_URL ?>/citas/actualizarServicio" method="POST">
         <input type="hidden" name="id" id="edit-id">
         <div class="modal-header bg-light">
           <h5 class="modal-title fw-bold text-dark">Editar Servicio</h5>
@@ -337,7 +337,7 @@
 <div class="modal modal-blur fade" id="modal-cita" tabindex="-1" role="dialog" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
     <div class="modal-content shadow-lg border-0 rounded-3">
-      <form action="/anacosmeticsy/public/citas/guardarCita" method="POST">
+      <form action="<?= BASE_URL ?>/citas/guardarCita" method="POST">
         <div class="modal-header bg-light">
           <h5 class="modal-title fw-bold text-dark">Agendar Nueva Cita de Salón</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -479,12 +479,12 @@
 
   function abrirModalEliminar(id, nombre) {
     document.getElementById('lbl-eliminar-nombre').innerText = nombre;
-    document.getElementById('btn-confirmar-eliminar').href = `/anacosmeticsy/public/citas/eliminarServicio/${id}`;
+    document.getElementById('btn-confirmar-eliminar').href = `<?= BASE_URL ?>/citas/eliminarServicio/${id}`;
     new bootstrap.Modal(document.getElementById('modal-eliminar-servicio')).show();
   }
 
   function abrirModalCancelarCita(citaId) {
-    document.getElementById('btn-ejecutar-cancelar').href = `/anacosmeticsy/public/citas/cancelarCita/${citaId}`;
+    document.getElementById('btn-ejecutar-cancelar').href = `<?= BASE_URL ?>/citas/cancelarCita/${citaId}`;
     new bootstrap.Modal(document.getElementById('modal-cancelar-cita')).show();
   }
 

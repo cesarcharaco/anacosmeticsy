@@ -16,11 +16,11 @@
         </div>
       </div>
       <div class="col-12 col-md-auto ms-md-auto d-flex gap-2">
-        <a href="/anacosmeticsy/public/ventas/historial" class="btn btn-outline-primary d-flex align-items-center gap-1">
+        <a href="<?= BASE_URL ?>/ventas/historial" class="btn btn-outline-primary d-flex align-items-center gap-1">
           <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-history" width="20" height="20" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 8l0 4l2 2" /><path d="M3.05 11a9 9 0 1 1 .5 4m-.5 5v-5h5" /></svg>
           Historial de Ventas
         </a>
-        <a href="/anacosmeticsy/public/dashboard" class="btn btn-outline-secondary d-flex align-items-center gap-1">
+        <a href="<?= BASE_URL ?>/dashboard" class="btn btn-outline-secondary d-flex align-items-center gap-1">
           <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-arrow-left" width="20" height="20" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M5 12l14 0" /><path d="M5 12l6 6" /><path d="M5 12l6 -6" /></svg>
           Volver al Dashboard
         </a>
@@ -379,7 +379,7 @@
     btnGuardar.innerText = 'Guardando...';
 
     // Se asume la ruta estándar del controlador de clientes para inserción asíncrona
-    fetch('/anacosmeticsy/public/clientes/guardarAjax', {
+    fetch('<?= BASE_URL ?>/clientes/guardarAjax', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ nombre, telefono, direccion })
@@ -797,7 +797,7 @@
       pagos: pagosArr
     };
 
-    fetch('/anacosmeticsy/public/ventas/procesarVenta', {
+    fetch('<?= BASE_URL ?>/ventas/procesarVenta', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(payload)

@@ -6,10 +6,10 @@
     <title>Ana Boutique Cosmetics, C.A.</title>
     
     <!-- Favicon de la Empresa -->
-    <link rel="icon" href="/anacosmeticsy/public/assets/img/logo_ana.ico" type="image/x-icon"/>
+    <link rel="icon" href="<?= BASE_URL ?>/assets/img/logo_ana.ico" type="image/x-icon"/>
     
     <!-- CSS Local de Tabler -->
-    <link href="/anacosmeticsy/public/assets/css/tabler.min.css" rel="stylesheet"/>
+    <link href="<?= BASE_URL ?>/assets/css/tabler.min.css" rel="stylesheet"/>
 
     <style>
       /* Fondo con marca de agua corporativa sutil */
@@ -24,7 +24,7 @@
         left: 0;
         width: 100vw;
         height: 100vh;
-        background-image: url('/anacosmeticsy/public/assets/img/logo_ana.jpeg');
+        background-image: url('<?= BASE_URL ?>/assets/img/logo_ana.jpeg');
         background-repeat: no-repeat;
         background-position: center center;
         background-size: 450px auto;
@@ -52,13 +52,13 @@
         <!-- Logo e Identidad Corporativa -->
         <div class="text-center mb-4">
           <div class="avatar avatar-xl rounded bg-white border p-1 shadow-sm mx-auto mb-3" style="width: 72px; height: 72px;">
-            <img src="/anacosmeticsy/public/assets/img/logo_ana.jpeg" alt="Logo Ana Boutique Cosmetics" class="w-100 h-100 object-fit-contain rounded">
+            <img src="<?= BASE_URL ?>/assets/img/logo_ana.jpeg" alt="Logo Ana Boutique Cosmetics" class="w-100 h-100 object-fit-contain rounded">
           </div>
           <h1 class="navbar-brand navbar-brand-autodark fw-bold fs-2 text-dark m-0">ANA BOUTIQUE COSMETICS, C.A.</h1>
           <div class="text-muted small mt-1">RIF: J508365690</div>
         </div>
         
-        <form class="card card-md card-login-glass shadow-lg rounded-3" action="/anacosmeticsy/public/auth/login" method="POST" autocomplete="off">
+        <form class="card card-md card-login-glass shadow-lg rounded-3" action="<?= BASE_URL ?>/auth/login" method="POST" autocomplete="off">
           <div class="card-body p-4">
             <h2 class="card-title text-center mb-4 fw-bold text-dark">Acceso al Sistema</h2>
 
@@ -101,7 +101,7 @@
     </div>
 
     <!-- JS Local de Tabler -->
-    <script src="/anacosmeticsy/public/assets/js/tabler.min.js"></script>
+    <script src="<?= BASE_URL ?>/assets/js/tabler.min.js"></script>
 
     <!-- Script JavaScript para alternar la visibilidad de la contraseña -->
     <script>

@@ -9,7 +9,7 @@ class ConfiguracionController {
 
     public function __construct() {
         if (!isset($_SESSION['user_id'])) {
-            header('Location: /anacosmeticsy/public/auth');
+            header('Location: ' . BASE_URL . '/auth');
             exit;
         }
         $this->bcvService = new BcvRateService();
@@ -31,7 +31,7 @@ class ConfiguracionController {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $nuevaTasa = $this->bcvService->refreshRate('USD');
             $_SESSION['mensaje'] = "Tasa BCV actualizada con éxito: Bs. " . number_format($nuevaTasa, 2, ',', '.');
-            header('Location: /anacosmeticsy/public/configuracion');
+            header('Location: ' . BASE_URL . '/configuracion');
             exit;
         }
     }

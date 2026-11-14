@@ -14,7 +14,7 @@ class VentasController {
 
     public function __construct() {
         if (!isset($_SESSION['user_id'])) {
-            header('Location: /anacosmeticsy/public/auth');
+            header('Location: ' . BASE_URL . '/auth');
             exit;
         }
         $this->bcvService = new BcvRateService();
@@ -65,7 +65,7 @@ class VentasController {
                     'success' => true,
                     'message' => '¡Venta procesada con éxito!',
                     'venta_id' => $ventaId,
-                    'redirect_url' => "/anacosmeticsy/public/ventas/notaEntrega/$ventaId"
+                    'redirect_url' => "' . BASE_URL . '/ventas/notaEntrega/$ventaId"
                 ]);
 
             } catch (Exception $e) {
@@ -86,14 +86,14 @@ class VentasController {
         $ventaId = filter_var($id, FILTER_VALIDATE_INT);
         if (!$ventaId) {
             $_SESSION['error'] = "ID de venta inválido.";
-            header('Location: /anacosmeticsy/public/ventas');
+            header('Location: ' . BASE_URL . '/ventas');
             exit;
         }
 
         $venta = Venta::obtenerPorId($ventaId);
         if (!$venta) {
             $_SESSION['error'] = "La venta especificada no existe.";
-            header('Location: /anacosmeticsy/public/ventas');
+            header('Location: ' . BASE_URL . '/ventas');
             exit;
         }
 
@@ -195,7 +195,7 @@ class VentasController {
                 $_SESSION['error'] = $e->getMessage();
             }
 
-            header('Location: /anacosmeticsy/public/ventas/historial');
+            header('Location: ' . BASE_URL . '/ventas/historial');
             exit;
         }
     }

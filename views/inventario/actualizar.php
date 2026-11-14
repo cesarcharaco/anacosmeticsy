@@ -17,7 +17,7 @@
       </div>
 
       <div class="col-12 col-md-auto ms-md-auto d-flex gap-2">
-        <a href="/anacosmeticsy/public/inventario" class="btn btn-outline-secondary">
+        <a href="<?= BASE_URL ?>/inventario" class="btn btn-outline-secondary">
           <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-arrow-left" width="20" height="20" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M5 12l14 0" /><path d="M5 12l6 6" /><path d="M5 12l6 -6" /></svg>
           Volver al Inventario
         </a>
@@ -30,7 +30,7 @@
 <div class="page-body">
   <div class="container-xl">
     
-    <form action="/anacosmeticsy/public/inventario/procesarActualizacion" method="POST" id="form-recepcion">
+    <form action="<?= BASE_URL ?>/inventario/procesarActualizacion" method="POST" id="form-recepcion">
       
       <div class="row row-cards">
         
@@ -109,7 +109,7 @@
             </div>
 
             <div class="card-footer bg-light d-flex justify-content-end gap-2 p-3">
-              <a href="/anacosmeticsy/public/inventario" class="btn btn-link link-secondary">Cancelar</a>
+              <a href="<?= BASE_URL ?>/inventario" class="btn btn-link link-secondary">Cancelar</a>
               <button type="submit" class="btn btn-success px-4 shadow-sm" id="btn-guardar-lote" disabled>
                 <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-check" width="20" height="20" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M5 12l5 5l10 -10" /></svg>
                 Procesar y Sumar al Inventario
@@ -129,7 +129,7 @@
 <div class="modal modal-blur fade" id="modal-producto" tabindex="-1" role="dialog" aria-hidden="true">
   <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
     <div class="modal-content shadow-lg border-0 rounded-3">
-      <form action="/anacosmeticsy/public/inventario/guardar" method="POST" autocomplete="off">
+      <form action="<?= BASE_URL ?>/inventario/guardar" method="POST" autocomplete="off">
         <div class="modal-header bg-light">
           <h5 class="modal-title fw-bold text-dark" id="modal-titulo">Nuevo Producto</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>

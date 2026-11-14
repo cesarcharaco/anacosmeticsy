@@ -22,7 +22,7 @@
           <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-user-plus" width="18" height="18" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M8 7a4 4 0 1 0 8 0a4 4 0 0 0 -8 0" /><path d="M6 21v-2a4 4 0 0 1 4 -4h4c.348 0 .686 .045 1 .128" /><path d="M16 19h6" /><path d="M19 16v6" /></svg>
           Nuevo Cliente
         </button>
-        <a href="/anacosmeticsy/public/dashboard" class="btn btn-outline-secondary d-flex align-items-center gap-1">
+        <a href="<?= BASE_URL ?>/dashboard" class="btn btn-outline-secondary d-flex align-items-center gap-1">
           <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-arrow-left" width="20" height="20" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M5 12l14 0" /><path d="M5 12l6 6" /><path d="M5 12l6 -6" /></svg>
           Volver
         </a>
@@ -145,7 +145,7 @@
           <ul class="pagination m-0 ms-auto">
             <!-- Botón Anterior -->
             <li class="page-item <?= ($paginaActual <= 1) ? 'disabled' : '' ?>">
-              <a class="page-link" href="/anacosmeticsy/public/clientes?p=<?= $paginaActual - 1 ?>" tabindex="-1">
+              <a class="page-link" href="<?= BASE_URL ?>/clientes?p=<?= $paginaActual - 1 ?>" tabindex="-1">
                 <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M15 6l-6 6l6 6" /></svg>
                 Anterior
               </a>
@@ -153,13 +153,13 @@
 
             <?php for ($i = 1; $i <= $totalPaginas; $i++): ?>
               <li class="page-item <?= ($paginaActual == $i) ? 'active' : '' ?>">
-                <a class="page-link" href="/anacosmeticsy/public/clientes?p=<?= $i ?>"><?= $i ?></a>
+                <a class="page-link" href="<?= BASE_URL ?>/clientes?p=<?= $i ?>"><?= $i ?></a>
               </li>
             <?php endfor; ?>
 
             <!-- Botón Siguiente -->
             <li class="page-item <?= ($paginaActual >= $totalPaginas) ? 'disabled' : '' ?>">
-              <a class="page-link" href="/anacosmeticsy/public/clientes?p=<?= $paginaActual + 1 ?>">
+              <a class="page-link" href="<?= BASE_URL ?>/clientes?p=<?= $paginaActual + 1 ?>">
                 Siguiente
                 <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 6l6 6l-6 6" /></svg>
               </a>
@@ -177,7 +177,7 @@
 <div class="modal modal-blur fade" id="modal-nuevo-cliente" tabindex="-1" role="dialog" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered" role="document">
     <div class="modal-content shadow-lg border-0 rounded-3">
-      <form action="/anacosmeticsy/public/clientes/guardar" method="POST">
+      <form action="<?= BASE_URL ?>/clientes/guardar" method="POST">
         <div class="modal-header bg-light">
           <h5 class="modal-title fw-bold text-dark d-flex align-items-center gap-2">
             <svg xmlns="http://www.w3.org/2000/svg" class="icon text-blue" width="20" height="20" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M8 7a4 4 0 1 0 8 0a4 4 0 0 0 -8 0" /><path d="M16 19h6" /><path d="M19 16v6" /></svg>
@@ -216,7 +216,7 @@
 <div class="modal modal-blur fade" id="modal-editar-cliente" tabindex="-1" role="dialog" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered" role="document">
     <div class="modal-content shadow-lg border-0 rounded-3">
-      <form action="/anacosmeticsy/public/clientes/actualizar" method="POST">
+      <form action="<?= BASE_URL ?>/clientes/actualizar" method="POST">
         <input type="hidden" name="id" id="edit-cli-id">
         <div class="modal-header bg-light">
           <h5 class="modal-title fw-bold text-dark d-flex align-items-center gap-2">
@@ -307,7 +307,7 @@
 
   function abrirModalEliminarCliente(id, nombre) {
     document.getElementById('lbl-eliminar-cli-nombre').innerText = nombre;
-    document.getElementById('btn-confirmar-eliminar-cli').href = `/anacosmeticsy/public/clientes/eliminar/${id}`;
+    document.getElementById('btn-confirmar-eliminar-cli').href = `<?= BASE_URL ?>/clientes/eliminar/${id}`;
 
     const modal = new bootstrap.Modal(document.getElementById('modal-eliminar-cliente'));
     modal.show();
