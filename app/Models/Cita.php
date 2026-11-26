@@ -97,8 +97,12 @@ class Cita {
                 $serviciosEnBD = $stmtServ->fetchAll(PDO::FETCH_ASSOC);
 
                 foreach ($serviciosEnBD as $s) {
-                    $totalRealUsd += floatval($s['precio_usd']);
-                    $serviciosValidos[] = $s['id'];
+                    $precioUnitario = round(floatval($s['precio_usd']), 2);
+                    $totalRealUsd += $precioUnitario;
+                    $serviciosValidos[] = [
+                        'id' => $s['id'],
+                        'precio_unitario_usd' => $precioUnitario
+                    ];
                 }
             }
 
@@ -122,14 +126,15 @@ class Cita {
             $citaId = $db->lastInsertId();
 
             $stmtPivote = $db->prepare("
-                INSERT INTO cita_servicios (cita_id, servicio_id) 
-                VALUES (:cita_id, :servicio_id)
+                INSERT INTO cita_servicios (cita_id, servicio_id, precio_unitario_usd) 
+                VALUES (:cita_id, :servicio_id, :precio_unitario_usd)
             ");
 
-            foreach ($serviciosValidos as $sId) {
+            foreach ($serviciosValidos as $srv) {
                 $stmtPivote->execute([
-                    'cita_id'    => $citaId,
-                    'servicio_id'=> $sId
+                    'cita_id'             => $citaId,
+                    'servicio_id'         => $srv['id'],
+                    'precio_unitario_usd' => $srv['precio_unitario_usd']
                 ]);
             }
 
