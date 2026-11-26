@@ -1,20 +1,27 @@
 <?php
 // public/index.php
-define('BASE_URL', 'https://anacosmeticsy.yermotorsca.com');
 
-
-// Iniciar sesión para control de usuarios
 session_start();
 
-// Ruta física del proyecto: carpeta superior a public.
 define('BASE_PATH', dirname(__DIR__) . '/');
-
 
 require_once BASE_PATH . 'app/Config/Env.php';
 Env::load(BASE_PATH . '.env');
 
+// BASE_URL desde .env, sin barra final
+$baseUrl = getenv('BASE_URL') ?: '';
+define('BASE_URL', rtrim($baseUrl, '/'));
 
-// Cargar configuración de base de datos
+define('APP_ENV', getenv('APP_ENV') ?: 'production');
+
+if (APP_ENV === 'local') {
+    ini_set('display_errors', '1');
+    error_reporting(E_ALL);
+} else {
+    ini_set('display_errors', '0');
+    error_reporting(0);
+}
+
 require_once BASE_PATH . 'app/Config/Database.php';
 
 // Capturar la URL amigable de forma segura y limpiar querystrings (?)

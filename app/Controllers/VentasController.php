@@ -65,7 +65,7 @@ class VentasController {
                     'success' => true,
                     'message' => '¡Venta procesada con éxito!',
                     'venta_id' => $ventaId,
-                    'redirect_url' => "' . BASE_URL . '/ventas/notaEntrega/$ventaId"
+                    'redirect_url' => BASE_URL . '/ventas/notaEntrega/' . $ventaId
                 ]);
 
             } catch (Exception $e) {

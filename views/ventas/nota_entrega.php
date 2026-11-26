@@ -29,7 +29,7 @@
     <div class="row g-2 align-items-center">
       <div class="col">
         <h2 class="page-title">Comprobante de Salida y Caja</h2>
-        <div class="text-muted mt-1">Nota de Entrega #[<?= $venta['id'] ?>]</div>
+        <div class="text-muted mt-1">Nota de Entrega #<?= str_pad($venta['id'], 6, '0', STR_PAD_LEFT) ?></div>
       </div>
       <div class="col-auto ms-auto d-print-none">
         <div class="btn-list">
@@ -52,7 +52,14 @@
     <!-- Contenedor Imprimible -->
     <div class="card card-lg shadow-sm border-0 mx-auto" id="printable-area" style="max-width: 800px;">
       <div class="card-body m-2">
-        
+        <?php if (($venta['estado'] ?? '') === 'anulada'): ?>
+          <div class="alert alert-danger text-center fw-bold mb-3">
+            VENTA ANULADA
+            <?php if (!empty($venta['motivo_anulacion'])): ?>
+              <div class="small fw-normal">Motivo: <?= htmlspecialchars($venta['motivo_anulacion']) ?></div>
+            <?php endif; ?>
+          </div>
+        <?php endif; ?>
         <!-- Cabecera de la Empresa (Datos ficticios listos para reemplazar) -->
         <div class="row mb-4">
           <div class="col-6">
@@ -131,6 +138,12 @@
                   <div>Monto Inicial Pagado en Caja: <strong>$<?= number_format($venta['monto_inicial_cashea_usd'], 2) ?></strong></div>
                   <div>Monto Financiado (Cashea): <strong>$<?= number_format($venta['monto_financiado_cashea_usd'], 2) ?></strong></div>
                 </div>
+              <?php elseif ($venta['tipo_venta'] === 'credito'): ?>
+                <span class="badge bg-blue-lt fw-bold mb-2">Crédito Directo (Deuda en Cuenta)</span>
+                <div class="small text-muted">
+                  <div>Abono Inicial en Caja: <strong>$<?= number_format($venta['monto_abonado_credito_usd'], 2) ?></strong></div>
+                  <div>Saldo Pendiente: <strong class="text-danger">$<?= number_format($venta['monto_pendiente_credito_usd'], 2) ?></strong></div>
+                </div>
               <?php else: ?>
                 <span class="badge bg-green-lt fw-bold mb-2">Venta Regular (100% Contado)</span>
                 <div class="small text-muted">Liquidado en su totalidad en caja.</div>
@@ -159,6 +172,15 @@
                   <td class="fw-bold text-dark py-1">Total a Pagar en Caja (Inicial):</td>
                   <td class="fw-bold text-success py-1">$<?= number_format($venta['monto_inicial_cashea_usd'], 2) ?></td>
                 </tr>
+              <?php elseif ($venta['tipo_venta'] === 'credito'): ?>
+                <tr>
+                  <td class="text-muted">Abonado en Caja:</td>
+                  <td class="fw-bold text-success">$<?= number_format($venta['monto_abonado_credito_usd'], 2) ?></td>
+                </tr>
+                <tr class="bg-blue-lt">
+                  <td class="fw-bold text-dark py-1">Saldo Pendiente (Deuda):</td>
+                  <td class="fw-bold text-danger py-1">$<?= number_format($venta['monto_pendiente_credito_usd'], 2) ?></td>
+                </tr>
               <?php endif; ?>
             </table>
           </div>
@@ -178,6 +200,11 @@
                 </tr>
               </thead>
               <tbody>
+                <?php if (empty($venta['pagos'])): ?>
+                    <tr>
+                      <td colspan="4" class="text-center text-muted small">Sin pagos registrados en caja.</td>
+                    </tr>
+                  <?php else: ?>
                 <?php foreach ($venta['pagos'] as $pago): ?>
                   <tr>
                     <td><strong><?= ucwords(str_replace('_', ' ', $pago['metodo_pago'])) ?></strong></td>
@@ -192,6 +219,7 @@
                     <td><?= htmlspecialchars($pago['referencia'] ?: 'N/A') ?></td>
                   </tr>
                 <?php endforeach; ?>
+                <?php endif; ?>
               </tbody>
             </table>
           </div>
